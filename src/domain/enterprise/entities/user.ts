@@ -9,8 +9,16 @@ interface UserProps {
 }
 
 export class User extends Entity<UserProps> {
+  get name() {
+    return this.props.name;
+  }
+
   get email() {
     return this.props.email;
+  }
+
+  get password() {
+    return this.props.password;
   }
 
   static create(props: UserProps, id?: UniqueEntityId) {

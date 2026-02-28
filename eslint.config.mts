@@ -9,6 +9,9 @@ export default defineConfig([
     plugins: { js },
     extends: ["js/recommended"],
     languageOptions: { globals: globals.browser },
+    rules: {
+      "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+    },
   },
   tseslint.configs.recommended,
 ]);
