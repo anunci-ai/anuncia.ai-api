@@ -11,6 +11,7 @@ interface AdvertisementProps {
   generatedImagesUrls?: string[];
   slug?: Slug;
   ecommerce: "MERCADO_LIVRE" | "SHOPIFY";
+  userId: UniqueEntityId;
 }
 
 export class Advertisement extends Entity<AdvertisementProps> {
