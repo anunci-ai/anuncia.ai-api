@@ -1,11 +1,13 @@
 import { Entity } from "../../../core/entitites/Entity";
 import { UniqueEntityId } from "../../../core/entitites/unique-entity-id";
+import { Optional } from "../../../core/types/optional";
 import { Password } from "./value-objects/password";
 
 interface UserProps {
   name: string;
   email: string;
   password?: Password;
+  createdAt?: Date;
 }
 
 export class User extends Entity<UserProps> {
@@ -21,8 +23,8 @@ export class User extends Entity<UserProps> {
     return this.props.password;
   }
 
-  static create(props: UserProps, id?: UniqueEntityId) {
-    const user = new User(props, id);
+  static create(props: Optional<UserProps, "createdAt">, id?: UniqueEntityId) {
+    const user = new User({ ...props, createdAt: new Date() }, id);
 
     return user;
   }
