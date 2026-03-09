@@ -23,7 +23,7 @@ interface ListingProps {
   generatedTitle?: string;
   generatedDescription?: string;
   generatedMetaTitle?: string;
-  generatedMetaDescriptions?: string;
+  generatedMetaDescription?: string;
   generatedTags?: string[];
   generatedSlug?: Slug;
   createdAt?: Date;

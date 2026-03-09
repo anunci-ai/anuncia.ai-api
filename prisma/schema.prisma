@@ -13,11 +13,105 @@ datasource db {
   provider = "postgresql"
 }
 
+enum ProviderEnum {
+  GOOGLE
+}
+
+enum MarketplaceEnum {
+  MERCADO_LIVRE
+  SHOPIFY
+}
+
+enum StatusEnum {
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
 model User {
   id        String   @id @default(uuid())
   name      String
   email     String   @unique
+  password  String?
   createdAt DateTime @default(now()) @map("created_at")
 
+  accounts      Account[]
+  subscriptions Subscription[]
+  listings      Listing[]
+
   @@map("users")
+}
+
+model Account {
+  id                String       @id @default(uuid())
+  userId            String       @map("user_id")
+  provider          ProviderEnum
+  providerAccountId String       @unique @map("provider_account_id")
+  createdAt         DateTime     @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("accounts")
+}
+
+model Plan {
+  id             String @id @default(uuid())
+  name           String
+  priceInCents   Int    @map("price_in_cents")
+  tokensQuantity Int    @map("tokens_quantity")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+model Subscription {
+  id              String   @id @default(uuid())
+  planId          String   @map("plan_id")
+  userId          String   @map("user_id")
+  tokensTotal     Int      @map("tokens_total")
+  tokensRemaining Int      @map("tokens_remaining")
+  startDate       DateTime @map("start_date")
+  endDate         DateTime @map("end_date")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  plan Plan @relation(fields: [planId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("subscriptions")
+}
+
+model Listing {
+  id                       String          @id @default(uuid())
+  userId                   String          @map("user_id")
+  marketplace              MarketplaceEnum
+  status                   StatusEnum
+  subjectImageUrl          String          @map("subject_image_url")
+  shortDescription         String          @map("short_description")
+  generatedTitle           String?         @map("generated_title")
+  generatedDescription     String?         @map("generated_description")
+  generatedMetaTitle       String?         @map("generated_meta_title")
+  generatedMetaDescription String?         @map("generated_meta_description")
+  generatedTags            String[]        @map("generated_tags")
+  generatedSlug            String?         @map("generated_slug")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user   User             @relation(fields: [userId], references: [id])
+  images GeneratedImage[]
+}
+
+model GeneratedImage {
+  id        String   @id @default(uuid())
+  listingId String   @map("listing_id")
+  url       String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  listing Listing @relation(fields: [listingId], references: [id])
+
+  @@map("generated_images")
 }

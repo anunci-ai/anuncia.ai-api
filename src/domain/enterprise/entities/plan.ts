@@ -10,6 +10,22 @@ interface PlanProps {
 }
 
 export class Plan extends Entity<PlanProps> {
+  get name() {
+    return this.props.name;
+  }
+
+  get priceInCents() {
+    return this.props.priceInCents;
+  }
+
+  get tokensQuantity() {
+    return this.props.tokensQuantity;
+  }
+
+  get createdAt() {
+    return this.props.createdAt;
+  }
+
   static create(props: Optional<PlanProps, "createdAt">, id?: UniqueEntityId) {
     const plan = new Plan(
       {
