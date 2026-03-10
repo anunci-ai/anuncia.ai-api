@@ -4,6 +4,20 @@ import { User } from "../../../domain/enterprise/entities/user";
 import { UserMapper } from "../../../domain/enterprise/mappers/user-mapper";
 
 export class PrismaUsersRepository implements UsersRepository {
+  async findById(id: string): Promise<User | null> {
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return UserMapper.toDomain(user);
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     const user = await prisma.user.findUnique({
       where: {
