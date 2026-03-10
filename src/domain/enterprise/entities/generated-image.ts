@@ -9,11 +9,23 @@ interface GeneratedImageProps {
 }
 
 export class GeneratedImage extends Entity<GeneratedImageProps> {
+  get listingId() {
+    return this.props.listingId;
+  }
+
+  get url() {
+    return this.props.url;
+  }
+
+  get createdAt() {
+    return this.props.createdAt;
+  }
+
   static create(props: Optional<GeneratedImageProps, "createdAt">, id?: UniqueEntityId) {
     const generatedimage = new GeneratedImage(
       {
         ...props,
-        createdAt: new Date(),
+        createdAt: props.createdAt ?? new Date(),
       },
       id,
     );

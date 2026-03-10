@@ -2,8 +2,8 @@ import { Entity } from "../../../core/entitites/Entity";
 import { UniqueEntityId } from "../../../core/entitites/unique-entity-id";
 import { Optional } from "../../../core/types/optional";
 
-enum ProviderEnum {
-  GOOGLE,
+export enum ProviderEnum {
+  GOOGLE = "GOOGLE",
 }
 
 interface AccountProps {
@@ -14,6 +14,22 @@ interface AccountProps {
 }
 
 export class Account extends Entity<AccountProps> {
+  get userId() {
+    return this.props.userId;
+  }
+
+  get provider() {
+    return this.props.provider;
+  }
+
+  get providerAccountId() {
+    return this.props.providerAccountId;
+  }
+
+  get createdAt() {
+    return this.props.createdAt;
+  }
+
   static create(props: Optional<AccountProps, "createdAt">, id?: UniqueEntityId) {
     const account = new Account({ ...props, createdAt: new Date() }, id);
 

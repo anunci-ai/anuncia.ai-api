@@ -23,6 +23,10 @@ export class User extends Entity<UserProps> {
     return this.props.password;
   }
 
+  get createdAt() {
+    return this.props.createdAt;
+  }
+
   static create(props: Optional<UserProps, "createdAt">, id?: UniqueEntityId) {
     const user = new User({ ...props, createdAt: new Date() }, id);
 
