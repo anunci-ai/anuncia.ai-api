@@ -103,6 +103,8 @@ model Listing {
 
   user   User             @relation(fields: [userId], references: [id])
   images GeneratedImage[]
+
+  @@map("listings")
 }
 
 model GeneratedImage {
