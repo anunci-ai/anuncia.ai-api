@@ -1,20 +1,18 @@
-import type { Request, Response } from "express";
+import { Controller } from "../../../core/infra/controller";
+import { created, HttpResponse } from "../../../core/infra/http-response";
 import { SignInWithPasswordUseCase } from "../../../domain/application/use-cases/sign-in-with-password";
-import { z } from "zod";
 
-export class SignInWithPasswordController {
+type SignInWithPasswordRequest = {
+  email: string;
+  password: string;
+};
+
+export class SignInWithPasswordController implements Controller {
   constructor(private signInWithPasswordUseCase: SignInWithPasswordUseCase) {}
 
-  async handle(request: Request, response: Response) {
-    const signInWithPasswordBodySchema = z.object({
-      email: z.email({ message: "E-mail inválido" }),
-      password: z.string().min(8, { message: "Senha deve ter no mínimo 8 caracteres." }),
-    });
-
-    const { email, password } = signInWithPasswordBodySchema.parse(request.body);
-
+  async handle({ email, password }: SignInWithPasswordRequest): Promise<HttpResponse> {
     const { token } = await this.signInWithPasswordUseCase.execute({ email, password });
 
-    return response.status(201).json({ token });
+    return created({ token });
   }
 }

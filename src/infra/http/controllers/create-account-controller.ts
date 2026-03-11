@@ -1,21 +1,19 @@
-import type { Request, Response } from "express";
 import { CreateAccountUseCase } from "../../../domain/application/use-cases/create-account";
-import { z } from "zod";
+import { Controller } from "../../../core/infra/controller";
+import { created, HttpResponse } from "../../../core/infra/http-response";
 
-export class CreateAccountController {
+type CreateAccountUseCaseRequest = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export class CreateAccountController implements Controller {
   constructor(private createAccountUseCase: CreateAccountUseCase) {}
 
-  async handle(request: Request, response: Response) {
-    const createAccountBodySchema = z.object({
-      name: z.string().min(4, { message: "Nome inválido" }),
-      email: z.email({ message: "E-mail inválido" }),
-      password: z.string().min(8, { message: "Senha deve ter no mínimo 8 caracteres." }),
-    });
-
-    const { name, email, password } = createAccountBodySchema.parse(request.body);
-
+  async handle({ name, email, password }: CreateAccountUseCaseRequest): Promise<HttpResponse> {
     const { userId } = await this.createAccountUseCase.execute({ name, email, password });
 
-    return response.status(201).json({ userId });
+    return created({ userId });
   }
 }
