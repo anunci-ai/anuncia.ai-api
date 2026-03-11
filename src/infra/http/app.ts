@@ -1,7 +1,9 @@
+import "dotenv/config";
 import cors from "cors";
 import express from "express";
 import { routes } from "./routes";
 import { auth } from "./middlewares/auth";
+import { env } from "../env";
 
 const app = express();
 app.use(cors());
@@ -14,7 +16,7 @@ app.get("/v1/hello", auth, (request, response) => {
   return response.json({ message: `Dmitri é gay.` });
 });
 
-const port = process.env.PORT || 8080;
+const port = env.PORT;
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
