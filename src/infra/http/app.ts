@@ -11,6 +11,16 @@ app.use(express.json());
 
 app.use("/v1", routes);
 
+app.get("/", (request, response) => {
+  return response.json({
+    status: "ok",
+    service: "ANUNCIA.AI API",
+    version: "1.0.0",
+    environment: env.NODE_ENV,
+    uptime: new Date(),
+  });
+});
+
 // TEST
 app.get("/v1/hello", auth, (request, response) => {
   return response.json({ message: `Dmitri é gay.` });
