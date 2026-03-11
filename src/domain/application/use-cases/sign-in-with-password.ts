@@ -1,6 +1,7 @@
 import { sign } from "jsonwebtoken";
 import { Password } from "../../enterprise/entities/value-objects/password";
 import { UsersRepository } from "../repositories/users-repository";
+import { env } from "../../../infra/env";
 
 interface SignInWithPasswordUseCaseRequest {
   email: string;
@@ -29,7 +30,7 @@ export class SignInWithPasswordUseCase {
       throw new Error("E-mail ou senha incorreto.");
     }
 
-    const token = sign({ sub: user.id.toString() }, process.env.JWT_SECRET!, { expiresIn: "1d" });
+    const token = sign({ sub: user.id.toString() }, env.JWT_SECRET, { expiresIn: "1d" });
 
     return {
       token,
