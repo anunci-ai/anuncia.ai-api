@@ -30,7 +30,7 @@ export class SignInWithPasswordUseCase {
 
     const passwordMatch = await Password.isValid(password, userPasswordHash!);
 
-    if (!passwordMatch) {
+    if (!passwordMatch.value) {
       return left(new InvalidEmailOrPasswordError());
     }
 

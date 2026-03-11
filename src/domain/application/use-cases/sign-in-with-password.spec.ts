@@ -24,6 +24,6 @@ describe("Create an account", async () => {
 
     const response = await sut.execute({ email: "thoms@jefferson.com", password: "123456" });
 
-    expect(response).toEqual(expect.objectContaining({ token: expect.any(String) }));
+    expect(response.value).toEqual(expect.objectContaining({ token: expect.any(String) }));
   });
 });

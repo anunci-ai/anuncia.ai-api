@@ -1,4 +1,5 @@
 import { compare, hash } from "bcryptjs";
+import { Either, left, right } from "../../../../core/either";
 
 export class Password {
   public value: string;
@@ -21,13 +22,13 @@ export class Password {
     return new Password(passwordHash);
   }
 
-  static async isValid(password: string, hash: string): Promise<boolean> {
+  static async isValid(password: string, hash: string): Promise<Either<false, true>> {
     const passwordMatchWithHash = await compare(password, hash);
 
     if (!passwordMatchWithHash) {
-      throw new Error(); // TODO
+      return left(false);
     }
 
-    return true;
+    return right(true);
   }
 }
