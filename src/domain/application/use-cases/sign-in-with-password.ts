@@ -3,15 +3,18 @@ import { Password } from "../../enterprise/entities/value-objects/password";
 import { UsersRepository } from "../repositories/users-repository";
 import { env } from "../../../infra/env";
 import { InvalidEmailOrPasswordError } from "./errors/invalid-email-or-password-error";
+import { Either, left, right } from "../../../core/either";
 
-interface SignInWithPasswordUseCaseRequest {
+type TokenResponse = {
+  token: string;
+};
+
+type SignInWithPasswordUseCaseRequest = {
   email: string;
   password: string;
-}
+};
 
-interface SignInWithPasswordUseCaseResponse {
-  token: string;
-}
+type SignInWithPasswordUseCaseResponse = Either<InvalidEmailOrPasswordError, TokenResponse>;
 
 export class SignInWithPasswordUseCase {
   constructor(private usersRepository: UsersRepository) {}
@@ -20,7 +23,7 @@ export class SignInWithPasswordUseCase {
     const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
-      throw new InvalidEmailOrPasswordError();
+      return left(new InvalidEmailOrPasswordError());
     }
 
     const userPasswordHash = user.password?.toString();
@@ -28,13 +31,11 @@ export class SignInWithPasswordUseCase {
     const passwordMatch = await Password.isValid(password, userPasswordHash!);
 
     if (!passwordMatch) {
-      throw new InvalidEmailOrPasswordError();
+      return left(new InvalidEmailOrPasswordError());
     }
 
     const token = sign({ sub: user.id.toString() }, env.JWT_SECRET, { expiresIn: "1d" });
 
-    return {
-      token,
-    };
+    return right({ token });
   }
 }

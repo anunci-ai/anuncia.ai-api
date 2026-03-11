@@ -52,13 +52,6 @@ export function tooManyRequests<T>(dto?: T): HttpResponse {
   };
 }
 
-export function internalServerError<T>(dto?: T): HttpResponse {
-  return {
-    statusCode: 500,
-    body: dto,
-  };
-}
-
 export function forbidden<T>(dto?: T): HttpResponse {
   return {
     statusCode: 403,
@@ -66,9 +59,13 @@ export function forbidden<T>(dto?: T): HttpResponse {
   };
 }
 
-export function notImplemented<T>(dto?: T): HttpResponse {
+export function fail(error: Error): HttpResponse {
+  console.log(error);
+
   return {
-    statusCode: 501,
-    body: dto,
+    statusCode: 500,
+    body: {
+      error: error.message,
+    },
   };
 }
