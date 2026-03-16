@@ -1,5 +1,5 @@
 import { User } from "../entities/user";
-import { User as PersistenceUser } from "../../../../generated/prisma/client";
+import { User as PersistenceUser } from "@prisma/client";
 import { UniqueEntityId } from "../../../core/entitites/unique-entity-id";
 import { Password } from "../entities/value-objects/password";
 

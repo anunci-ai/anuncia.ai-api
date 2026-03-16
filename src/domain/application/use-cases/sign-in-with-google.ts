@@ -5,6 +5,9 @@ import { env } from "../../../infra/env";
 import { Either, left, right } from "../../../core/either";
 import { InvalidGoogleIdTokenError } from "./errors/InvalidGoogleIdTokenError";
 import { googleClient } from "../../../infra/google/client";
+import { AccountsRepository } from "../repositories/accounts-repository";
+import { Account, ProviderEnum } from "../../enterprise/entities/account";
+import { UnitOfWork } from "../../../core/unit-of-work";
 
 type TokenResponse = {
   token: string;
@@ -17,7 +20,11 @@ type SignInWithGoogleUseCaseRequest = {
 type SignInWithGoogleUseCaseResponse = Either<InvalidGoogleIdTokenError, TokenResponse>;
 
 export class SignInWithGoogleUseCase {
-  constructor(private usersRepository: UsersRepository) {}
+  constructor(
+    private usersRepository: UsersRepository,
+    private accountsRepository: AccountsRepository,
+    private unitOfWork: UnitOfWork,
+  ) {}
 
   async execute({ googleIdToken }: SignInWithGoogleUseCaseRequest): Promise<SignInWithGoogleUseCaseResponse> {
     try {
@@ -34,19 +41,31 @@ export class SignInWithGoogleUseCase {
         return left(new InvalidGoogleIdTokenError());
       }
 
-      const { email, name } = payload;
+      const { email, name, sub } = payload;
 
       // 3. Verificar se o utilizador já existe na nossa base de dados
       let user = await this.usersRepository.findByEmail(email);
 
       // 4. Se não existir, fazemos a inserção automática (primeiro acesso)
       if (!user) {
-        user = User.create({
+        const newUser = User.create({
           name,
           email,
         });
 
-        await this.usersRepository.save(user);
+        user = await this.unitOfWork.execute(async (trx) => {
+          const createdUser = await this.usersRepository.save(newUser, trx);
+
+          const newAccount = Account.create({
+            provider: "GOOGLE" as ProviderEnum,
+            providerAccountId: sub,
+            userId: createdUser.id,
+          });
+
+          await this.accountsRepository.save(newAccount, trx);
+
+          return createdUser;
+        });
       }
 
       // 5. Gerar o token JWT da nossa API para o Front-end prosseguir
