@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "..";
 import { UsersRepository } from "../../../domain/application/repositories/users-repository";
 import { User } from "../../../domain/enterprise/entities/user";
@@ -32,8 +33,10 @@ export class PrismaUsersRepository implements UsersRepository {
     return UserMapper.toDomain(user);
   }
 
-  async save(user: User): Promise<User> {
-    const newUser = await prisma.user.create({
+  async save(user: User, trx: Prisma.TransactionClient): Promise<User> {
+    const client = trx ?? prisma;
+
+    const newUser = await client.user.create({
       data: {
         name: user.name,
         email: user.email,
