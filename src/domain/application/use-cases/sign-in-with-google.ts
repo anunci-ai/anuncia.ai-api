@@ -1,40 +1,29 @@
 import { sign } from "jsonwebtoken";
-import { OAuth2Client } from "google-auth-library";
 import { UsersRepository } from "../repositories/users-repository";
 import { User } from "../../enterprise/entities/user";
 import { env } from "../../../infra/env";
 import { Either, left, right } from "../../../core/either";
-
-export class InvalidGoogleTokenError extends Error {
-  constructor() {
-    super("O token fornecido pelo Google é invalido ou expirou");
-    this.name = "InvalidGoogleTokenError";
-  }
-}
+import { InvalidGoogleIdTokenError } from "./errors/InvalidGoogleIdTokenError";
+import { googleClient } from "../../../infra/google/client";
 
 type TokenResponse = {
   token: string;
 };
 
-type AuthenticateWithGoogleUseCaseRequest = {
-  idToken: string;
+type SignInWithGoogleUseCaseRequest = {
+  googleIdToken: string;
 };
 
-type AuthenticateWithGoogleUseCaseResponse = Either<InvalidGoogleTokenError, TokenResponse>;
+type SignInWithGoogleUseCaseResponse = Either<InvalidGoogleIdTokenError, TokenResponse>;
 
-export class AuthenticateWithGoogleUseCase {
-  private googleClient: OAuth2Client;
+export class SignInWithGoogleUseCase {
+  constructor(private usersRepository: UsersRepository) {}
 
-  constructor(private usersRepository: UsersRepository) {
-    // Instanciamos o cliente do Google usando o Client ID que virá das variáveis de ambiente
-    this.googleClient = new OAuth2Client(env.GOOGLE_CLIENT_ID);
-  }
-
-  async execute({ idToken }: AuthenticateWithGoogleUseCaseRequest): Promise<AuthenticateWithGoogleUseCaseResponse> {
+  async execute({ googleIdToken }: SignInWithGoogleUseCaseRequest): Promise<SignInWithGoogleUseCaseResponse> {
     try {
       // 1. Validar o token recebido do Front-end com os servidores do Google
-      const ticket = await this.googleClient.verifyIdToken({
-        idToken,
+      const ticket = await googleClient.verifyIdToken({
+        idToken: googleIdToken,
         audience: env.GOOGLE_CLIENT_ID,
       });
 
@@ -42,7 +31,7 @@ export class AuthenticateWithGoogleUseCase {
       const payload = ticket.getPayload();
 
       if (!payload || !payload.email || !payload.name) {
-        return left(new InvalidGoogleTokenError());
+        return left(new InvalidGoogleIdTokenError());
       }
 
       const { email, name } = payload;
@@ -55,7 +44,6 @@ export class AuthenticateWithGoogleUseCase {
         user = User.create({
           name,
           email,
-          // Não passamos password aqui
         });
 
         await this.usersRepository.save(user);
@@ -67,7 +55,7 @@ export class AuthenticateWithGoogleUseCase {
       return right({ token });
     } catch {
       // Se a biblioteca do Google atirar um erro (token falso, expirado, etc), caímos aqui
-      return left(new InvalidGoogleTokenError());
+      return left(new InvalidGoogleIdTokenError());
     }
   }
 }
