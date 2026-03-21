@@ -8,6 +8,7 @@ export class UserMapper {
     return User.create(
       {
         name: raw.name,
+        avatarUrl: raw.avatarUrl ?? undefined,
         email: raw.email,
         password: raw.password ? Password.create(raw.password) : undefined,
         createdAt: raw.createdAt,
@@ -20,6 +21,7 @@ export class UserMapper {
     return {
       id: user.id.toString(),
       name: user.name,
+      avatarUrl: user.avatarUrl ?? null,
       email: user.email,
       password: user.password ? user.password?.toString() : null,
       createdAt: user.createdAt ?? new Date(),

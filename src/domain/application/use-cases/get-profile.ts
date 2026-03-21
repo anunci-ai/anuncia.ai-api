@@ -21,6 +21,7 @@ export class GetProfileUseCase {
       user: {
         id: user.id.toString(),
         name: user.name,
+        avatarUrl: user.avatarUrl,
         email: user.email,
       },
     });

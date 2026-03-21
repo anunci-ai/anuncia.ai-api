@@ -5,6 +5,7 @@ import { Password } from "./value-objects/password";
 
 interface UserProps {
   name: string;
+  avatarUrl?: string;
   email: string;
   password?: Password;
   createdAt?: Date;
@@ -13,6 +14,10 @@ interface UserProps {
 export class User extends Entity<UserProps> {
   get name() {
     return this.props.name;
+  }
+
+  get avatarUrl() {
+    return this.props.avatarUrl;
   }
 
   get email() {

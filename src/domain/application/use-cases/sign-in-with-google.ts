@@ -37,11 +37,15 @@ export class SignInWithGoogleUseCase {
       // 2. Extrair os dados do perfil do Google
       const payload = ticket.getPayload();
 
+      console.log({
+        payload,
+      });
+
       if (!payload || !payload.email || !payload.name) {
         return left(new InvalidGoogleIdTokenError());
       }
 
-      const { email, name, sub } = payload;
+      const { email, name, sub, picture } = payload;
 
       // 3. Verificar se o utilizador já existe na nossa base de dados
       let user = await this.usersRepository.findByEmail(email);
@@ -50,6 +54,7 @@ export class SignInWithGoogleUseCase {
       if (!user) {
         const newUser = User.create({
           name,
+          avatarUrl: picture,
           email,
         });
 

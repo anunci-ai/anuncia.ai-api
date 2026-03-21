@@ -39,6 +39,7 @@ export class PrismaUsersRepository implements UsersRepository {
     const newUser = await client.user.create({
       data: {
         name: user.name,
+        avatarUrl: user.avatarUrl,
         email: user.email,
         password: user.password?.value,
       },
