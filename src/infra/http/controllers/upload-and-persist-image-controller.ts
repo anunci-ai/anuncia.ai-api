@@ -1,29 +1,39 @@
-import { Request, Response } from "express";
 import { z } from "zod";
 import { UploadAndPersistImageUseCase } from "../../../domain/application/use-cases/upload-and-persist-image";
+import { Controller } from "../../../core/infra/controller";
+import { clientError, created, fail, HttpResponse } from "../../../core/infra/http-response";
 
 const uploadImageBodySchema = z.object({
   marketplace: z.enum(["MERCADO_LIVRE", "SHOPIFY"]),
   shortDescription: z.string().min(1, "A descrição curta é obrigatória."),
 });
 
-export class UploadAndPersistImageController {
+// Tipagem do objeto limpo que o Adapter vai enviar para nós
+type UploadRequest = {
+  userId: string;
+  marketplace: unknown;
+  shortDescription: unknown;
+  file?: Express.Multer.File;
+};
+
+export class UploadAndPersistImageController implements Controller {
   constructor(private uploadAndPersistImage: UploadAndPersistImageUseCase) {}
 
-  async handle(request: Request, response: Response) {
+  async handle(request: UploadRequest): Promise<HttpResponse> {
     try {
-      const { marketplace, shortDescription } = uploadImageBodySchema.parse(request.body);
+      const { marketplace, shortDescription } = uploadImageBodySchema.parse({
+        marketplace: request.marketplace,
+        shortDescription: request.shortDescription,
+      });
 
       const file = request.file;
 
       if (!file) {
-        return response.status(400).json({ message: "Arquivo de imagem não enviado." });
+        return clientError("Arquivo de imagem não enviado.");
       }
 
-      const userId = request.user!.sub;
-
       const result = await this.uploadAndPersistImage.execute({
-        userId,
+        userId: request.userId,
         fileName: file.originalname,
         fileType: file.mimetype,
         body: file.buffer,
@@ -33,17 +43,18 @@ export class UploadAndPersistImageController {
 
       if (result.isLeft()) {
         const error = result.value;
-        return response.status(400).json({ message: error.message });
+        return clientError(error.message);
       }
 
-      return response.status(201).json({
-        message: "Upload realizado e anúncio em processamento!",
-      });
+      return created({ message: "Upload realizado e anúncio em processamento!" });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return response.status(400).json({ message: "Dados inválidos", errors: error.format() });
+        return clientError({ message: "Dados inválidos", errors: error.format() });
       }
-      return response.status(500).json({ message: "Erro interno no servidor." });
+      if (error instanceof Error) {
+        return fail(error);
+      }
+      return fail(new Error(String(error)));
     }
   }
 }
