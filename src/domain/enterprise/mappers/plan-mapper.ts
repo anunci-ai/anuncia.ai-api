@@ -1,5 +1,5 @@
 import { Plan } from "../entities/plan";
-import { Plan as PersistencePlan } from "../../../../generated/prisma/client";
+import { Plan as PersistencePlan } from "@prisma/client";
 import { UniqueEntityId } from "../../../core/entitites/unique-entity-id";
 
 export class PlanMapper {

@@ -1,5 +1,5 @@
 import { Subscription } from "../entities/subscription";
-import { Subscription as PersistenceSubscription } from "../../../../generated/prisma/client";
+import { Subscription as PersistenceSubscription } from "@prisma/client";
 import { UniqueEntityId } from "../../../core/entitites/unique-entity-id";
 
 export class SubscriptionMapper {

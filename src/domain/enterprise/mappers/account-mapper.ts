@@ -1,5 +1,5 @@
 import { Account, ProviderEnum } from "../entities/account";
-import { Account as PersistenceAccount } from "../../../../generated/prisma/client";
+import { Account as PersistenceAccount } from "@prisma/client";
 import { UniqueEntityId } from "../../../core/entitites/unique-entity-id";
 
 export class AccountMapper {
