@@ -9,6 +9,7 @@ export const adaptRoute = (controller: Controller) => {
       ...request.params,
       ...request.query,
       userId: request.user?.sub as string,
+      file: request.file,
     };
 
     const httpResponse = await controller.handle(requestData);
@@ -16,7 +17,6 @@ export const adaptRoute = (controller: Controller) => {
     if (httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299) {
       return response.status(httpResponse.statusCode).json(httpResponse.body);
     } else {
-      // Handle 'httpResponse.body' being of unknown type
       let errorMessage = "Unknown error";
 
       if (typeof httpResponse.body === "object" && httpResponse.body !== null && "error" in httpResponse.body) {
