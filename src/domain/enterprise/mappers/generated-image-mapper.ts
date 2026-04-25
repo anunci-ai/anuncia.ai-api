@@ -1,6 +1,6 @@
 import { GeneratedImage } from "../entities/generated-image";
 import { GeneratedImage as PersistenceGeneratedImage } from "@prisma/client";
-import { UniqueEntityId } from "../../../core/entitites/unique-entity-id";
+import { UniqueEntityId } from "../../../core/entities/unique-entity-id";
 
 export class AccountMapper {
   static toDomain(raw: PersistenceGeneratedImage) {

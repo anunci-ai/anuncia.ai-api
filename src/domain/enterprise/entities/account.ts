@@ -1,5 +1,5 @@
-import { Entity } from "../../../core/entitites/Entity";
-import { UniqueEntityId } from "../../../core/entitites/unique-entity-id";
+import { Entity } from "../../../core/entities/Entity";
+import { UniqueEntityId } from "../../../core/entities/unique-entity-id";
 import { Optional } from "../../../core/types/optional";
 
 export enum ProviderEnum {

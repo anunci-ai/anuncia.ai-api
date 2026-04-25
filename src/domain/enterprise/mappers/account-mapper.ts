@@ -1,6 +1,6 @@
 import { Account, ProviderEnum } from "../entities/account";
 import { Account as PersistenceAccount } from "@prisma/client";
-import { UniqueEntityId } from "../../../core/entitites/unique-entity-id";
+import { UniqueEntityId } from "../../../core/entities/unique-entity-id";
 
 export class AccountMapper {
   static toDomain(raw: PersistenceAccount) {

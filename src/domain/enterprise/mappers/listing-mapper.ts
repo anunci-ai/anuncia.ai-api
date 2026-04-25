@@ -1,6 +1,6 @@
 import { Listing, MarketplaceEnum, StatusEnum } from "../entities/listing";
 import { Listing as PersistenceListing } from "@prisma/client";
-import { UniqueEntityId } from "../../../core/entitites/unique-entity-id";
+import { UniqueEntityId } from "../../../core/entities/unique-entity-id";
 import { Slug } from "../entities/value-objects/slug";
 
 export class ListingMapper {
