@@ -4,12 +4,15 @@ import express from "express";
 import { routes } from "./routes";
 import { auth } from "./middlewares/auth";
 import { env } from "../env";
+import path from "path";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 app.use("/v1", routes);
+
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.get("/", (request, response) => {
   return response.json({

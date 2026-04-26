@@ -34,8 +34,11 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.64",
     "@prisma/adapter-pg": "^7.4.0",
     "@prisma/client": "^6.19.2",
+    "@upstash/qstash": "^2.10.1",
+    "ai": "^6.0.168",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
