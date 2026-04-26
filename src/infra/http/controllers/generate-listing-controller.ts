@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { GenerateListingUseCase } from "../../../domain/application/use-cases/generate-listing";
-import { fail, ok } from "../../../core/infra/http-response";
+import { clientError, fail, ok } from "../../../core/infra/http-response";
 import { MarketplaceEnum } from "../../../domain/enterprise/entities/listing";
 
 const generateListingRequest = z.object({
@@ -27,7 +27,7 @@ export class GenerateListingController {
       });
 
       if (result.isLeft()) {
-        return;
+        return clientError();
       }
 
       return ok(result.value);

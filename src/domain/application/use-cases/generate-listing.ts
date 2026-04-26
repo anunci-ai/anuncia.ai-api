@@ -33,7 +33,7 @@ export class GenerateListingUseCase {
       marketplace,
       subjectImageUrl,
       shortDescription,
-      status: "PENDING" as StatusEnum,
+      status: "PROCESSING" as StatusEnum,
     });
 
     const listing = await this.listingsRepository.save(newListing);
