@@ -21,6 +21,7 @@ describe("Create an account", async () => {
   it("not should be able to create an user account with an email that already exists", async () => {
     await sut.execute({ name: "John Doe", email: "john@doe.com", password: "123456" });
 
+    // teste
     const response = await sut.execute({ name: "John Smith", email: "john@doe.com", password: "123456" });
 
     expect(response.value).toBeInstanceOf(EmailAlreadyTakenError);

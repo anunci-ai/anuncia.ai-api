@@ -11,6 +11,11 @@ export const envSchema = z.object({
   CLOUDFLARE_SECRET_ACCESS_KEY: z.string(),
   CLOUDFLARE_BUCKET_NAME: z.string(),
   CLOUDFLARE_PUBLIC_URL: z.string(),
+  QSTASH_URL: z.url(),
+  QSTASH_TOKEN: z.string(),
+  QSTASH_CURRENT_SIGNING_KEY: z.string(),
+  QSTASH_NEXT_SIGNING_KEY: z.string(),
+  GEMINI_API_KEY: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

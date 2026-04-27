@@ -1,6 +1,6 @@
 import { Plan } from "../entities/plan";
 import { Plan as PersistencePlan } from "@prisma/client";
-import { UniqueEntityId } from "../../../core/entitites/unique-entity-id";
+import { UniqueEntityId } from "../../../core/entities/unique-entity-id";
 
 export class PlanMapper {
   static toDomain(raw: PersistencePlan) {

@@ -25,6 +25,7 @@ enum MarketplaceEnum {
 }
 
 enum StatusEnum {
+  PENDING
   PROCESSING
   COMPLETED
   FAILED

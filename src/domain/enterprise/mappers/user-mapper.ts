@@ -1,6 +1,6 @@
 import { User } from "../entities/user";
 import { User as PersistenceUser } from "@prisma/client";
-import { UniqueEntityId } from "../../../core/entitites/unique-entity-id";
+import { UniqueEntityId } from "../../../core/entities/unique-entity-id";
 import { Password } from "../entities/value-objects/password";
 
 export class UserMapper {

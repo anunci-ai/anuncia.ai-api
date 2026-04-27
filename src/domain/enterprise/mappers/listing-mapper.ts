@@ -1,6 +1,10 @@
 import { Listing, MarketplaceEnum, StatusEnum } from "../entities/listing";
-import { Listing as PersistenceListing } from "@prisma/client";
-import { UniqueEntityId } from "../../../core/entitites/unique-entity-id";
+import {
+  Listing as PersistenceListing,
+  MarketplaceEnum as PrismaMarketplaceEnum,
+  StatusEnum as PrismaStatusEnum,
+} from "@prisma/client";
+import { UniqueEntityId } from "../../../core/entities/unique-entity-id";
 import { Slug } from "../entities/value-objects/slug";
 
 export class ListingMapper {
@@ -8,8 +12,8 @@ export class ListingMapper {
     return Listing.create(
       {
         userId: new UniqueEntityId(raw.userId),
-        marketplace: raw.marketplace as MarketplaceEnum,
-        status: raw.status as StatusEnum,
+        marketplace: raw.marketplace as unknown as MarketplaceEnum,
+        status: raw.status as unknown as StatusEnum,
         subjectImageUrl: raw.subjectImageUrl,
         shortDescription: raw.shortDescription,
         generatedTitle: raw.generatedTitle ?? undefined,
@@ -27,8 +31,8 @@ export class ListingMapper {
     return {
       id: listing.id.toString(),
       userId: listing.userId.toString(),
-      marketplace: listing.marketplace,
-      status: listing.status,
+      marketplace: listing.marketplace as unknown as PrismaMarketplaceEnum,
+      status: listing.status as unknown as PrismaStatusEnum,
       subjectImageUrl: listing.subjectImageUrl,
       shortDescription: listing.shortDescription,
       generatedTitle: listing.generatedTitle ?? null,
