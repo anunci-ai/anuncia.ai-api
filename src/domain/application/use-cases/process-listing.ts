@@ -1,11 +1,9 @@
 import { Either, left, right } from "../../../core/either";
-import { googleAI } from "../../../infra/google/ai";
-import { prompt, SEOListingData } from "../../../infra/prompt";
+import { TextService } from "../../../infra/ai/text-service";
 import { Listing, StatusEnum } from "../../enterprise/entities/listing";
 import { Slug } from "../../enterprise/entities/value-objects/slug";
 import { ListingsRepository } from "../repositories/listings-repository";
 import { ResourceNotFoundError } from "./errors/resource-not-found-error";
-import { generateText } from "ai";
 
 type ProcessListingUseCaseRequest = {
   listingId: string;
@@ -14,7 +12,10 @@ type ProcessListingUseCaseRequest = {
 type ProcessListingUseCaseResponse = Either<ResourceNotFoundError, null>;
 
 export class ProcessListingUseCase {
-  constructor(private listingsRepository: ListingsRepository) {}
+  constructor(
+    private listingsRepository: ListingsRepository,
+    private textService: TextService,
+  ) {}
 
   async execute({ listingId }: ProcessListingUseCaseRequest): Promise<ProcessListingUseCaseResponse> {
     const listing = await this.listingsRepository.findById(listingId);
@@ -27,19 +28,8 @@ export class ProcessListingUseCase {
       return right(null);
     }
 
-    const { text } = await generateText({
-      model: googleAI("gemini-2.5-flash"),
-      prompt: prompt(listing.shortDescription),
-    });
-
-    const generatedListingText = text
-      .trim()
-      .replace(/```json\n?/g, "")
-      .replace(/```\n?$/g, "");
-
-    const { generatedTitle, generatedDescription, generatedMetaDescription, generatedTags } = JSON.parse(
-      generatedListingText,
-    ) as SEOListingData;
+    const { generatedTitle, generatedDescription, generatedMetaDescription, generatedTags } =
+      await this.textService.execute({ description: listing.shortDescription });
 
     const { id, userId, marketplace, subjectImageUrl, shortDescription } = listing;
 

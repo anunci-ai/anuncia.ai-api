@@ -5,7 +5,7 @@ export type SEOListingData = {
   generatedTags: string[];
 };
 
-export function prompt(description: string) {
+export function promptForTextData(description: string) {
   return `
     Based on the following product description, generate an SEO-friendly ad optimized for better sales on Google and organic indexing.
 
@@ -27,4 +27,29 @@ export function prompt(description: string) {
     Tags must be relevant for SEO and search trends
     All returned values must be written in Brazilian Portuguese (pt-BR)
 `;
+}
+
+export function promptForImagesGeneration(description: string) {
+  return `
+    Professional e-commerce product photography of {productName}.
+
+    ${description}
+
+    Generate exactly 3 images of the SAME product with consistent design and appearance.
+
+    Each image must follow these rules:
+    - Image 1: front view, centered
+    - Image 2: side view (profile)
+    - Image 3: 45-degree perspective angle
+
+    General requirements:
+    - white background
+    - studio lighting
+    - soft shadows
+    - high resolution
+    - realistic product
+    - no text, no watermark
+
+    All images must look like the same product, only changing the camera angle.
+  `;
 }
