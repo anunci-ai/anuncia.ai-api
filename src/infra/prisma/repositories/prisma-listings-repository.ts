@@ -1,9 +1,32 @@
 import { prisma } from "..";
+import { PaginationParams } from "../../../core/repositories/pagination-params";
 import { ListingsRepository } from "../../../domain/application/repositories/listings-repository";
 import { Listing } from "../../../domain/enterprise/entities/listing";
 import { ListingMapper } from "../../../domain/enterprise/mappers/listing-mapper";
 
 export class PrismaListingsRepository implements ListingsRepository {
+  async findManyRecentByUserId(
+    userId: string,
+    { page }: PaginationParams,
+  ): Promise<{ id: string; shortDescription: string }[]> {
+    const listings = await prisma.listing.findMany({
+      select: {
+        id: true,
+        shortDescription: true,
+      },
+      where: {
+        userId,
+      },
+      take: 20,
+      skip: (page - 1) * 1,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return listings;
+  }
+
   async findByIdAndUserId(id: string, userId: string): Promise<Listing | null> {
     const listing = await prisma.listing.findUnique({
       where: {
