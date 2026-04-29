@@ -4,6 +4,21 @@ import { Listing } from "../../../domain/enterprise/entities/listing";
 import { ListingMapper } from "../../../domain/enterprise/mappers/listing-mapper";
 
 export class PrismaListingsRepository implements ListingsRepository {
+  async findByIdAndUserId(id: string, userId: string): Promise<Listing | null> {
+    const listing = await prisma.listing.findUnique({
+      where: {
+        id,
+        userId,
+      },
+    });
+
+    if (!listing) {
+      return null;
+    }
+
+    return ListingMapper.toDomain(listing);
+  }
+
   async findById(id: string): Promise<Listing | null> {
     const listing = await prisma.listing.findUnique({
       where: {
