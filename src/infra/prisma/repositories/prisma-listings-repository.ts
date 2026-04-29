@@ -1,18 +1,29 @@
 import { prisma } from "..";
 import { PaginationParams } from "../../../core/repositories/pagination-params";
 import { ListingsRepository } from "../../../domain/application/repositories/listings-repository";
-import { Listing } from "../../../domain/enterprise/entities/listing";
+import { Listing, StatusEnum } from "../../../domain/enterprise/entities/listing";
 import { ListingMapper } from "../../../domain/enterprise/mappers/listing-mapper";
 
 export class PrismaListingsRepository implements ListingsRepository {
+  async updateStatus(id: string, status: StatusEnum): Promise<void> {
+    await prisma.listing.update({
+      where: {
+        id,
+      },
+      data: {
+        status,
+      },
+    });
+  }
+
   async findManyRecentByUserId(
     userId: string,
     { page }: PaginationParams,
-  ): Promise<{ id: string; shortDescription: string }[]> {
+  ): Promise<{ id: string; inputDescription: string }[]> {
     const listings = await prisma.listing.findMany({
       select: {
         id: true,
-        shortDescription: true,
+        inputDescription: true,
       },
       where: {
         userId,
@@ -79,9 +90,7 @@ export class PrismaListingsRepository implements ListingsRepository {
       data: {
         userId: listing.userId.toString(),
         marketplace: listing.marketplace,
-        subjectImageUrl: listing.subjectImageUrl,
-        shortDescription: listing.shortDescription,
-        status: listing.status,
+        inputDescription: listing.inputDescription,
       },
     });
 

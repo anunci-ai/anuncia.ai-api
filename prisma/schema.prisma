@@ -25,8 +25,11 @@ enum MarketplaceEnum {
 }
 
 enum StatusEnum {
-  PENDING
-  PROCESSING
+  DRAFT
+  TEXT_PROCESSING
+  TEXT_COMPLETED
+  IMAGE_PROCESSING
+  IMAGE_COMPLETED
   COMPLETED
   FAILED
 }
@@ -89,18 +92,19 @@ model Subscription {
 }
 
 model Listing {
-  id                       String          @id @default(uuid())
-  userId                   String          @map("user_id")
-  marketplace              MarketplaceEnum
-  status                   StatusEnum
-  subjectImageUrl          String          @map("subject_image_url")
-  shortDescription         String          @map("short_description")
-  generatedTitle           String?         @map("generated_title")
-  generatedDescription     String?         @map("generated_description")
-  generatedMetaTitle       String?         @map("generated_meta_title")
-  generatedMetaDescription String?         @map("generated_meta_description")
-  generatedTags            String[]        @map("generated_tags")
-  generatedSlug            String?         @map("generated_slug")
+  id                       String   @id @default(uuid())
+  userId                   String   @map("user_id")
+  inputDescription         String   @map("input_description")
+  originalImageUrl         String?  @map("original_image_url")
+  generatedTitle           String?  @map("generated_title")
+  generatedDescription     String?  @map("generated_description")
+  generatedMetaTitle       String?  @map("generated_meta_title")
+  generatedMetaDescription String?  @map("generated_meta_description")
+  generatedTags            String[] @map("generated_tags")
+  generatedSlug            String?  @map("generated_slug")
+
+  marketplace MarketplaceEnum
+  status      StatusEnum      @default(DRAFT)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

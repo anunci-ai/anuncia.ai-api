@@ -1,8 +1,9 @@
 import { PaginationParams } from "../../../core/repositories/pagination-params";
-import { Listing } from "../../enterprise/entities/listing";
+import { Listing, StatusEnum } from "../../enterprise/entities/listing";
 
 export interface ListingsRepository {
-  findManyRecentByUserId(userId: string, params: PaginationParams): Promise<{ id: string; shortDescription: string }[]>;
+  updateStatus(id: string, status: StatusEnum): Promise<void>;
+  findManyRecentByUserId(userId: string, params: PaginationParams): Promise<{ id: string; inputDescription: string }[]>;
   findByIdAndUserId(id: string, userId: string): Promise<Listing | null>;
   findById(id: string): Promise<Listing | null>;
   update(listing: Listing): Promise<Listing>;
