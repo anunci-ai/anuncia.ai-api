@@ -1,4 +1,4 @@
-import { left, right } from "../../../core/either";
+import { Either, left, right } from "../../../core/either";
 import { TextService } from "../../../infra/ai/text-service";
 import { Listing, StatusEnum } from "../../enterprise/entities/listing";
 import { ListingsRepository } from "../repositories/listings-repository";
@@ -8,13 +8,15 @@ type ProcessListingTextUseCaseRequest = {
   listingId: string;
 };
 
+type ProcessListingTextUseCaseResponse = Either<ResourceNotFoundError, null>;
+
 export class ProcessListingTextUseCase {
   constructor(
     private listingsRepository: ListingsRepository,
     private textService: TextService,
   ) {}
 
-  async execute({ listingId }: ProcessListingTextUseCaseRequest) {
+  async execute({ listingId }: ProcessListingTextUseCaseRequest): Promise<ProcessListingTextUseCaseResponse> {
     const listing = await this.listingsRepository.findById(listingId);
 
     if (!listing) {
@@ -46,6 +48,8 @@ export class ProcessListingTextUseCase {
       );
 
       await this.listingsRepository.update(updatedListing);
+
+      return right(null);
     } catch (error) {
       await this.listingsRepository.updateStatus(listingId, "FAILED" as StatusEnum);
       throw error;
