@@ -23,14 +23,14 @@ export class GenerateListingTextUseCase {
 
     await this.listingsRepository.updateStatus(listingId, "TEXT_PROCESSING" as StatusEnum);
 
-    if (env.NODE_ENV === "production") {
-      await qstash.publishJSON({
-        url: "https://api.anunciaai.com/v1/listings/process-text",
-        body: {
-          listingId: listing.id.toString(),
-        },
-      });
-    }
+    await qstash.publishJSON({
+      url: `${env.API_URL}/v1/listings/process-text`,
+      body: {
+        listingId: listing.id.toString(),
+      },
+    });
+
+    console.log("passou aqui");
 
     return right(null);
   }

@@ -12,8 +12,8 @@ type GetListingUseCaseResponseData = {
     id: string;
     marketplace: string;
     status: string;
-    subjectImageUrl: string;
-    shortDescription: string;
+    inputDescription: string;
+    originalImageUrl?: string;
     generatedTitle?: string;
     generatedDescription?: string;
     generatedMetaTitle?: string;
@@ -42,8 +42,8 @@ export class GetListingUseCase {
         id: listing.id.toString(),
         marketplace: listing.marketplace,
         status: listing.status,
-        subjectImageUrl: listing.subjectImageUrl,
-        shortDescription: listing.shortDescription,
+        originalImageUrl: listing.originalImageUrl,
+        inputDescription: listing.inputDescription,
         generatedTitle: listing.generatedTitle,
         generatedDescription: listing.generatedDescription,
         generatedMetaTitle: listing.generatedMetaTitle,
