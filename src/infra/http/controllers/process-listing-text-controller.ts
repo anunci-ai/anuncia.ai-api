@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { fail, notFound, ok } from "../../../core/infra/http-response";
+import { z, ZodError } from "zod";
+import { clientError, fail, notFound, ok } from "../../../core/infra/http-response";
 import { ProcessListingTextUseCase } from "../../../domain/application/use-cases/process-listing-text";
 
 const processListingTextControllerRequest = z.object({
@@ -27,9 +27,10 @@ export class ProcessListingTextController {
 
       return ok();
     } catch (err) {
-      if (err instanceof Error) {
-        return fail(err);
+      if (err instanceof ZodError) {
+        return clientError(z.prettifyError(err));
       }
+
       // If 'err' is not an Error, wrap it
       return fail(new Error(String(err)));
     }

@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import { Controller } from "../../../core/infra/controller";
-import { fail, HttpResponse, notFound, ok } from "../../../core/infra/http-response";
+import { clientError, fail, HttpResponse, notFound, ok } from "../../../core/infra/http-response";
 import { GetListingUseCase } from "../../../domain/application/use-cases/get-listing";
 
 const getListingControllerRequest = z.object({
@@ -29,9 +29,10 @@ export class GetListingController implements Controller {
 
       return ok({ listing });
     } catch (err) {
-      if (err instanceof Error) {
-        return fail(err);
+      if (err instanceof ZodError) {
+        return clientError(z.prettifyError(err));
       }
+
       // If 'err' is not an Error, wrap it
       return fail(new Error(String(err)));
     }

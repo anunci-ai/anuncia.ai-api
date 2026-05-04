@@ -1,7 +1,7 @@
 import { CreateAccountUseCase } from "../../../domain/application/use-cases/create-account";
 import { Controller } from "../../../core/infra/controller";
-import { conflict, created, fail, HttpResponse } from "../../../core/infra/http-response";
-import { z } from "zod";
+import { clientError, conflict, created, fail, HttpResponse } from "../../../core/infra/http-response";
+import { z, ZodError } from "zod";
 
 const createAccountControllerRequest = z.object({
   name: z.string(),
@@ -30,9 +30,10 @@ export class CreateAccountController implements Controller {
 
       return created({ userId });
     } catch (err) {
-      if (err instanceof Error) {
-        return fail(err);
+      if (err instanceof ZodError) {
+        return clientError(z.prettifyError(err));
       }
+
       // If 'err' is not an Error, wrap it
       return fail(new Error(String(err)));
     }

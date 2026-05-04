@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import { SignInWithGoogleUseCase } from "../../../domain/application/use-cases/sign-in-with-google";
-import { created, fail, HttpResponse, unauthorized } from "../../../core/infra/http-response";
+import { clientError, created, fail, HttpResponse, unauthorized } from "../../../core/infra/http-response";
 import { Controller } from "../../../core/infra/controller";
 
 const signInWithGoogleControllerRequest = z.object({
@@ -29,9 +29,10 @@ export class SignInWithGoogleController implements Controller {
 
       return created({ token });
     } catch (err) {
-      if (err instanceof Error) {
-        return fail(err);
+      if (err instanceof ZodError) {
+        return clientError(z.prettifyError(err));
       }
+
       // If 'err' is not an Error, wrap it
       return fail(new Error(String(err)));
     }
