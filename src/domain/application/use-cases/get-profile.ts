@@ -1,11 +1,11 @@
 import { Either, left, right } from "../../../core/either";
 import { UsersRepository } from "../repositories/users-repository";
-import { UserNotFoundError } from "./errors/user-not-found-error";
+import { ResourceNotFoundError } from "./errors/resource-not-found-error";
 
 type GetProfileUseCaseRequest = {
   userId: string;
 };
-type GetProfileUseCaseResponse = Either<UserNotFoundError, { user: { id: string; name: string; email: string } }>;
+type GetProfileUseCaseResponse = Either<ResourceNotFoundError, { user: { id: string; name: string; email: string } }>;
 
 export class GetProfileUseCase {
   constructor(private usersRepository: UsersRepository) {}
@@ -14,7 +14,7 @@ export class GetProfileUseCase {
     const user = await this.usersRepository.findById(userId);
 
     if (!user) {
-      return left(new UserNotFoundError());
+      return left(new ResourceNotFoundError("Usuário não encontrado."));
     }
 
     return right({
