@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { fail, notFound, ok } from "../../../core/infra/http-response";
+import { accepted, fail, notFound } from "../../../core/infra/http-response";
 import { GenerateListingTextUseCase } from "../../../domain/application/use-cases/generate-listing-text";
 
 const generateListingTextControllerRequest = z.object({
@@ -25,7 +25,7 @@ export class GenerateListingTextController {
         return notFound(error.message);
       }
 
-      return ok();
+      return accepted();
     } catch (err) {
       if (err instanceof Error) {
         return fail(err);

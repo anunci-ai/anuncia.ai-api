@@ -3,18 +3,18 @@ import { SignInWithGoogleUseCase } from "../../../domain/application/use-cases/s
 import { created, fail, HttpResponse, unauthorized } from "../../../core/infra/http-response";
 import { Controller } from "../../../core/infra/controller";
 
-const signInWithGoogleRequest = z.object({
+const signInWithGoogleControllerRequest = z.object({
   googleIdToken: z.string({ message: "Google ID Token is missing!" }),
 });
 
-type SignInWithGoogleRequest = z.infer<typeof signInWithGoogleRequest>;
+type SignInWithGoogleControllerRequest = z.infer<typeof signInWithGoogleControllerRequest>;
 
 export class SignInWithGoogleController implements Controller {
   constructor(private signInWithGoogleUseCase: SignInWithGoogleUseCase) {}
 
-  async handle(request: SignInWithGoogleRequest): Promise<HttpResponse> {
+  async handle(request: SignInWithGoogleControllerRequest): Promise<HttpResponse> {
     try {
-      const { googleIdToken } = signInWithGoogleRequest.parse(request);
+      const { googleIdToken } = signInWithGoogleControllerRequest.parse(request);
 
       const result = await this.signInWithGoogleUseCase.execute({
         googleIdToken,

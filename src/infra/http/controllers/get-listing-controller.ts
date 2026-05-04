@@ -1,17 +1,22 @@
+import { z } from "zod";
 import { Controller } from "../../../core/infra/controller";
 import { fail, HttpResponse, notFound, ok } from "../../../core/infra/http-response";
 import { GetListingUseCase } from "../../../domain/application/use-cases/get-listing";
 
-type GetListingControllerRequest = {
-  userId: string;
-  listingId: string;
-};
+const getListingControllerRequest = z.object({
+  userId: z.uuid(),
+  listingId: z.uuid(),
+});
+
+type GetListingControllerRequest = z.infer<typeof getListingControllerRequest>;
 
 export class GetListingController implements Controller {
   constructor(private getListingUseCase: GetListingUseCase) {}
 
-  async handle({ userId, listingId }: GetListingControllerRequest): Promise<HttpResponse> {
+  async handle(request: GetListingControllerRequest): Promise<HttpResponse> {
     try {
+      const { userId, listingId } = getListingControllerRequest.parse(request);
+
       const result = await this.getListingUseCase.execute({ userId, listingId });
 
       if (result.isLeft()) {

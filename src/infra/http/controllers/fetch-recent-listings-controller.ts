@@ -1,18 +1,23 @@
+import { z } from "zod";
 import { Controller } from "../../../core/infra/controller";
 import { clientError, fail, HttpResponse, ok } from "../../../core/infra/http-response";
 import { FetchRecentListingUseCase } from "../../../domain/application/use-cases/fetch-recent-listings";
 
-type FetchRecentListingsControllerRequest = {
-  userId: string;
-  page?: string;
-};
+const fetchRecentListingsControllerRequest = z.object({
+  userId: z.uuid(),
+  page: z.coerce.number().optional(),
+});
+
+type FetchRecentListingsControllerRequest = z.infer<typeof fetchRecentListingsControllerRequest>;
 
 export class FetchRecentListingsController implements Controller {
   constructor(private fetchRecentListingsUseCase: FetchRecentListingUseCase) {}
 
-  async handle({ userId, page }: FetchRecentListingsControllerRequest): Promise<HttpResponse> {
+  async handle(request: FetchRecentListingsControllerRequest): Promise<HttpResponse> {
     try {
-      const result = await this.fetchRecentListingsUseCase.execute({ userId, page: Number(page ?? "1") });
+      const { userId, page } = fetchRecentListingsControllerRequest.parse(request);
+
+      const result = await this.fetchRecentListingsUseCase.execute({ userId, page: page ?? 1 });
 
       if (result.isLeft()) {
         return clientError();
