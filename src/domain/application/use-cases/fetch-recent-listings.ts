@@ -8,7 +8,7 @@ type FetchRecentListingUseCaseRequest = {
 
 type ListingFormat = {
   id: string;
-  shortDescription: string;
+  inputDescription: string;
 };
 
 type FetchRecentListingUseCaseResponseData = {
