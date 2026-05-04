@@ -12,6 +12,7 @@ export const envSchema = z.object({
   QSTASH_NEXT_SIGNING_KEY: z.string(),
   GEMINI_API_KEY: z.string(),
   API_URL: z.url(),
+  AI_TEXT_MODEL: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

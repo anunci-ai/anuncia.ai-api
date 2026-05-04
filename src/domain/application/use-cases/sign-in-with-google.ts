@@ -37,10 +37,6 @@ export class SignInWithGoogleUseCase {
       // 2. Extrair os dados do perfil do Google
       const payload = ticket.getPayload();
 
-      console.log({
-        payload,
-      });
-
       if (!payload || !payload.email || !payload.name) {
         return left(new InvalidGoogleIdTokenError());
       }

@@ -30,8 +30,6 @@ export class GenerateListingTextUseCase {
       },
     });
 
-    console.log("passou aqui");
-
     return right(null);
   }
 }
