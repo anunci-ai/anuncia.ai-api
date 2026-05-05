@@ -1,7 +1,7 @@
 import { z, ZodError } from "zod";
 import { clientError, fail, ok } from "../../../core/infra/http-response";
 import { MarketplaceEnum } from "../../../domain/enterprise/entities/listing";
-import { CreateListingUseCase } from "../../../domain/application/use-cases/create-listing";
+import { CreateListingUseCase } from "../../../domain/application/use-cases/listing/create-listing/create-listing";
 
 const generateListingControllerRequest = z.object({
   userId: z.uuid(),

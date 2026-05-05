@@ -1,7 +1,7 @@
 import { z, ZodError } from "zod";
 import { Controller } from "../../../core/infra/controller";
 import { clientError, created, fail, HttpResponse } from "../../../core/infra/http-response";
-import { SignInWithPasswordUseCase } from "../../../domain/application/use-cases/sign-in-with-password";
+import { SignInWithPasswordUseCase } from "../../../domain/application/use-cases/user/sign-in-with-password/sign-in-with-password";
 
 const signInWithPasswordControllerRequest = z.object({
   email: z.email(),

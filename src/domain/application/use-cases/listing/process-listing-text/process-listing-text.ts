@@ -1,12 +1,9 @@
-import { Either, left, right } from "../../../core/either";
-import { TextService } from "../../../infra/ai/text-service";
-import { Listing, StatusEnum } from "../../enterprise/entities/listing";
-import { ListingsRepository } from "../repositories/listings-repository";
-import { ResourceNotFoundError } from "./errors/resource-not-found-error";
-
-type ProcessListingTextUseCaseRequest = {
-  listingId: string;
-};
+import { Either, left, right } from "../../../../../core/either";
+import { TextService } from "../../../../../infra/ai/text-service";
+import { Listing, StatusEnum } from "../../../../enterprise/entities/listing";
+import { ListingsRepository } from "../../../repositories/listings-repository";
+import { ResourceNotFoundError } from "./../../_errors/resource-not-found-error";
+import { ProcessListingTextDTO } from "./process-listing-text-dto";
 
 type ProcessListingTextUseCaseResponse = Either<ResourceNotFoundError, null>;
 
@@ -16,7 +13,7 @@ export class ProcessListingTextUseCase {
     private textService: TextService,
   ) {}
 
-  async execute({ listingId }: ProcessListingTextUseCaseRequest): Promise<ProcessListingTextUseCaseResponse> {
+  async execute({ listingId }: ProcessListingTextDTO): Promise<ProcessListingTextUseCaseResponse> {
     const listing = await this.listingsRepository.findById(listingId);
 
     if (!listing) {
@@ -30,19 +27,15 @@ export class ProcessListingTextUseCase {
     try {
       const { id, userId, marketplace, inputDescription } = listing;
 
-      const { generatedTitle, generatedDescription, generatedMetaDescription, generatedTags } =
-        await this.textService.execute({ description: listing.inputDescription });
+      const textServiceResult = await this.textService.execute({ description: listing.inputDescription });
 
       const updatedListing = Listing.create(
         {
           userId,
           marketplace,
           inputDescription,
-          generatedTitle,
-          generatedDescription,
-          generatedMetaDescription,
-          generatedTags,
           status: "TEXT_COMPLETED" as StatusEnum,
+          ...textServiceResult,
         },
         id,
       );

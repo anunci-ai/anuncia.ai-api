@@ -1,7 +1,7 @@
 import { z, ZodError } from "zod";
 import { Controller } from "../../../core/infra/controller";
 import { clientError, fail, HttpResponse, ok } from "../../../core/infra/http-response";
-import { GetProfileUseCase } from "../../../domain/application/use-cases/get-profile";
+import { GetProfileUseCase } from "../../../domain/application/use-cases/user/get-profile/get-profile";
 
 const getProfileControllerRequest = z.object({
   userId: z.uuid(),

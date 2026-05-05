@@ -1,5 +1,5 @@
 import { PrismaUsersRepository } from "../../prisma/repositories/prisma-users-repository";
-import { SignInWithGoogleUseCase } from "../../../domain/application/use-cases/sign-in-with-google";
+import { SignInWithGoogleUseCase } from "../../../domain/application/use-cases/account/sign-in-with-google/sign-in-with-google";
 import { SignInWithGoogleController } from "../controllers/sign-in-with-google-controller";
 import { Controller } from "../../../core/infra/controller";
 import { PrismaAccountsRepository } from "../../prisma/repositories/prisma-accounts-repository";

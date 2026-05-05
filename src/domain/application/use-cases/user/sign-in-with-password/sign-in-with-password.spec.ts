@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { InMemoryUsersRepository } from "../../../../test/repositories/in-memory-users-repository";
+import { InMemoryUsersRepository } from "../../../../../../test/repositories/in-memory-users-repository";
 import { SignInWithPasswordUseCase } from "./sign-in-with-password";
-import { User } from "../../enterprise/entities/user";
-import { Password } from "../../enterprise/entities/value-objects/password";
+import { User } from "../../../../enterprise/entities/user";
+import { Password } from "../../../../enterprise/entities/value-objects/password";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let sut: SignInWithPasswordUseCase;

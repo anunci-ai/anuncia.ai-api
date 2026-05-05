@@ -1,5 +1,5 @@
 import { Controller } from "../../../core/infra/controller";
-import { SignInWithPasswordUseCase } from "../../../domain/application/use-cases/sign-in-with-password";
+import { SignInWithPasswordUseCase } from "../../../domain/application/use-cases/user/sign-in-with-password/sign-in-with-password";
 import { PrismaUsersRepository } from "../../prisma/repositories/prisma-users-repository";
 import { SignInWithPasswordController } from "../controllers/sign-in-with-password-controller";
 

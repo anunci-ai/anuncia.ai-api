@@ -1,5 +1,5 @@
 import { z, ZodError } from "zod";
-import { SignInWithGoogleUseCase } from "../../../domain/application/use-cases/sign-in-with-google";
+import { SignInWithGoogleUseCase } from "../../../domain/application/use-cases/account/sign-in-with-google/sign-in-with-google";
 import { clientError, created, fail, HttpResponse, unauthorized } from "../../../core/infra/http-response";
 import { Controller } from "../../../core/infra/controller";
 

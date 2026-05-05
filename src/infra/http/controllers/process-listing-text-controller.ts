@@ -1,6 +1,6 @@
 import { z, ZodError } from "zod";
 import { clientError, fail, notFound, ok } from "../../../core/infra/http-response";
-import { ProcessListingTextUseCase } from "../../../domain/application/use-cases/process-listing-text";
+import { ProcessListingTextUseCase } from "../../../domain/application/use-cases/listing/process-listing-text/process-listing-text";
 
 const processListingTextControllerRequest = z.object({
   listingId: z.uuid(),

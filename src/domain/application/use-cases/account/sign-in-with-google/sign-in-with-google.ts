@@ -1,23 +1,17 @@
 import { sign } from "jsonwebtoken";
-import { UsersRepository } from "../repositories/users-repository";
-import { User } from "../../enterprise/entities/user";
-import { env } from "../../../infra/env";
-import { Either, left, right } from "../../../core/either";
-import { InvalidGoogleIdTokenError } from "./errors/invalid-google-id-token-error";
-import { googleClient } from "../../../infra/google/client";
-import { AccountsRepository } from "../repositories/accounts-repository";
-import { Account, ProviderEnum } from "../../enterprise/entities/account";
-import { UnitOfWork } from "../../../core/unit-of-work";
+import { UsersRepository } from "../../../repositories/users-repository";
+import { User } from "../../../../enterprise/entities/user";
+import { env } from "../../../../../infra/env";
+import { Either, left, right } from "../../../../../core/either";
+import { InvalidGoogleIdTokenError } from "../../_errors/invalid-google-id-token-error";
+import { googleClient } from "../../../../../infra/google/client";
+import { AccountsRepository } from "../../../repositories/accounts-repository";
+import { Account, ProviderEnum } from "../../../../enterprise/entities/account";
+import { UnitOfWork } from "../../../../../core/unit-of-work";
+import { SignInWithGoogleDTO } from "./sign-in-with-google-dto";
+import { SignInWithGoogleResponse } from "./sign-in-with-google-response";
 
-type TokenResponse = {
-  token: string;
-};
-
-type SignInWithGoogleUseCaseRequest = {
-  googleIdToken: string;
-};
-
-type SignInWithGoogleUseCaseResponse = Either<InvalidGoogleIdTokenError, TokenResponse>;
+type SignInWithGoogleUseCaseResponse = Either<InvalidGoogleIdTokenError, SignInWithGoogleResponse>;
 
 export class SignInWithGoogleUseCase {
   constructor(
@@ -26,7 +20,7 @@ export class SignInWithGoogleUseCase {
     private unitOfWork: UnitOfWork,
   ) {}
 
-  async execute({ googleIdToken }: SignInWithGoogleUseCaseRequest): Promise<SignInWithGoogleUseCaseResponse> {
+  async execute({ googleIdToken }: SignInWithGoogleDTO): Promise<SignInWithGoogleUseCaseResponse> {
     try {
       const ticket = await googleClient.verifyIdToken({
         idToken: googleIdToken,

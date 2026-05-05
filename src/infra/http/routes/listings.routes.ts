@@ -9,9 +9,6 @@ import { makeProcessListingTextController } from "../factories/make-process-list
 
 const listingsRoutes = Router();
 
-// listingsRoutes.post("/generate", auth, adaptRoute(makeGenerateListingController()));
-// listingsRoutes.post("/process", adaptRoute(makeProcessListingController()));
-
 listingsRoutes.post("/", auth, adaptRoute(makeCreateListingController()));
 
 listingsRoutes.get("/:listingId", auth, adaptRoute(makeGetListingController()));

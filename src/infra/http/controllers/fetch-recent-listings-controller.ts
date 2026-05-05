@@ -1,7 +1,7 @@
 import { z, ZodError } from "zod";
 import { Controller } from "../../../core/infra/controller";
 import { clientError, fail, HttpResponse, ok } from "../../../core/infra/http-response";
-import { FetchRecentListingUseCase } from "../../../domain/application/use-cases/fetch-recent-listings";
+import { FetchRecentListingUseCase } from "../../../domain/application/use-cases/listing/fetch-recent-listings/fetch-recent-listings";
 
 const fetchRecentListingsControllerRequest = z.object({
   userId: z.uuid(),

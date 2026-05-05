@@ -1,24 +1,24 @@
-import { CreateAccountUseCase } from "../../../domain/application/use-cases/create-account";
+import { CreateUserUseCase } from "../../../domain/application/use-cases/user/create-user/create-user";
 import { Controller } from "../../../core/infra/controller";
 import { clientError, conflict, created, fail, HttpResponse } from "../../../core/infra/http-response";
 import { z, ZodError } from "zod";
 
-const createAccountControllerRequest = z.object({
+const createUserControllerRequest = z.object({
   name: z.string(),
   email: z.string(),
   password: z.string(),
 });
 
-type CreateAccountControllerRequest = z.infer<typeof createAccountControllerRequest>;
+type CreateUserControllerRequest = z.infer<typeof createUserControllerRequest>;
 
-export class CreateAccountController implements Controller {
-  constructor(private createAccountUseCase: CreateAccountUseCase) {}
+export class CreateUserController implements Controller {
+  constructor(private createUserUseCase: CreateUserUseCase) {}
 
-  async handle(request: CreateAccountControllerRequest): Promise<HttpResponse> {
+  async handle(request: CreateUserControllerRequest): Promise<HttpResponse> {
     try {
-      const { name, email, password } = createAccountControllerRequest.parse(request);
+      const { name, email, password } = createUserControllerRequest.parse(request);
 
-      const result = await this.createAccountUseCase.execute({ name, email, password });
+      const result = await this.createUserUseCase.execute({ name, email, password });
 
       if (result.isLeft()) {
         const error = result.value;

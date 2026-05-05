@@ -1,6 +1,6 @@
 import { z, ZodError } from "zod";
 import { accepted, clientError, fail, notFound } from "../../../core/infra/http-response";
-import { GenerateListingTextUseCase } from "../../../domain/application/use-cases/generate-listing-text";
+import { GenerateListingTextUseCase } from "../../../domain/application/use-cases/listing/generate-listing-text/generate-listing-text";
 
 const generateListingTextControllerRequest = z.object({
   listingId: z.uuid(),

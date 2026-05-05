@@ -1,20 +1,17 @@
-import { Either, left, right } from "../../../core/either";
-import { env } from "../../../infra/env";
-import { qstash } from "../../../infra/qstash";
-import { StatusEnum } from "../../enterprise/entities/listing";
-import { ListingsRepository } from "../repositories/listings-repository";
-import { ResourceNotFoundError } from "./errors/resource-not-found-error";
-
-type GenerateListingTextUseCaseRequest = {
-  listingId: string;
-};
+import { Either, left, right } from "../../../../../core/either";
+import { env } from "../../../../../infra/env";
+import { qstash } from "../../../../../infra/qstash";
+import { StatusEnum } from "../../../../enterprise/entities/listing";
+import { ListingsRepository } from "../../../repositories/listings-repository";
+import { ResourceNotFoundError } from "../../_errors/resource-not-found-error";
+import { GenerateListingTextDTO } from "./generate-listing-text-dto";
 
 type GenerateListingTextUseCaseResponse = Either<ResourceNotFoundError, null>;
 
 export class GenerateListingTextUseCase {
   constructor(private listingsRepository: ListingsRepository) {}
 
-  async execute({ listingId }: GenerateListingTextUseCaseRequest): Promise<GenerateListingTextUseCaseResponse> {
+  async execute({ listingId }: GenerateListingTextDTO): Promise<GenerateListingTextUseCaseResponse> {
     const listing = await this.listingsRepository.findById(listingId);
 
     if (!listing) {

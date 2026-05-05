@@ -1,7 +1,7 @@
 import { z, ZodError } from "zod";
 import { Controller } from "../../../core/infra/controller";
 import { clientError, fail, HttpResponse, notFound, ok } from "../../../core/infra/http-response";
-import { GetListingUseCase } from "../../../domain/application/use-cases/get-listing";
+import { GetListingUseCase } from "../../../domain/application/use-cases/listing/get-listing/get-listing";
 
 const getListingControllerRequest = z.object({
   userId: z.uuid(),
