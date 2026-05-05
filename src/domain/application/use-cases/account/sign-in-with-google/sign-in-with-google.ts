@@ -1,3 +1,4 @@
+import type { StringValue } from "ms";
 import { sign } from "jsonwebtoken";
 import { UsersRepository } from "../../../repositories/users-repository";
 import { User } from "../../../../enterprise/entities/user";
@@ -59,7 +60,7 @@ export class SignInWithGoogleUseCase {
         });
       }
 
-      const token = sign({ sub: user.id.toString() }, env.JWT_SECRET, { expiresIn: "1d" });
+      const token = sign({ sub: user.id.toString() }, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN as StringValue });
 
       return right({ token });
     } catch {

@@ -1,3 +1,4 @@
+import type { StringValue } from "ms";
 import { sign } from "jsonwebtoken";
 import { Password } from "../../../../enterprise/entities/value-objects/password";
 import { UsersRepository } from "../../../repositories/users-repository";
@@ -27,7 +28,7 @@ export class SignInWithPasswordUseCase {
       return left(new InvalidEmailOrPasswordError());
     }
 
-    const token = sign({ sub: user.id.toString() }, env.JWT_SECRET, { expiresIn: "1d" });
+    const token = sign({ sub: user.id.toString() }, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN as StringValue });
 
     return right({ token });
   }
