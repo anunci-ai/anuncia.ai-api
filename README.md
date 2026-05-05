@@ -17,18 +17,39 @@ sequenceDiagram
     participant API as API Node + Express
     participant DB as PostgreSQL
     participant Q as Upstash QStash
-    participant W as /process-listing (Express Route)
-    participant AI as AI Services (Image + Text)
+    participant WT as /process-text (Worker)
+    participant WI as /process-images (Worker)
+    participant AI as AI Services (Text + Image)
 
     U->>API: POST /listings
-    API->>DB: Create Listing (status=PROCESSING)
-    API->>Q: Publish Job (listingId)
-    API-->>U: 202 Accepted (processing)
+    API->>DB: Create Listing (status=DRAFT)
+    API-->>U: 201 Created (listingId)
 
-    Q->>W: HTTP POST with listingId
-    W->>DB: Fetch Listing
-    W->>AI: Generate Images + SEO Content
-    AI-->>W: Generated Data
-    W->>DB: Save images + title + description
-    W->>DB: Update status=COMPLETED
+    U->>API: POST /listings/:id/generate-text
+    API->>DB: Update status=TEXT_PROCESSING
+    API->>Q: Publish Job (process-text)
+    API-->>U: 202 Accepted
+
+    Q->>WT: HTTP POST (listingId)
+    WT->>DB: Fetch Listing
+    WT->>AI: Generate Title + Description
+    AI-->>WT: Generated Text
+    WT->>DB: Save title + description
+    WT->>DB: Update status=TEXT_COMPLETED
+
+    U->>API: PATCH /listings/:id/image
+    API->>DB: Save originalImageUrl
+    API-->>U: 200 OK
+
+    U->>API: POST /listings/:id/generate-images
+    API->>DB: Update status=IMAGE_PROCESSING
+    API->>Q: Publish Job (process-images)
+    API-->>U: 202 Accepted
+
+    Q->>WI: HTTP POST (listingId)
+    WI->>DB: Fetch Listing
+    WI->>AI: Generate 3 Images from reference
+    AI-->>WI: Generated Images
+    WI->>DB: Save images
+    WI->>DB: Update status=COMPLETED
 ```
