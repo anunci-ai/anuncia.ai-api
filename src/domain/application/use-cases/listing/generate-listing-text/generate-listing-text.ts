@@ -1,7 +1,6 @@
 import { Either, left, right } from "../../../../../core/either";
-import { env } from "../../../../../infra/env";
-import { qstash } from "../../../../../infra/qstash";
 import { StatusEnum } from "../../../../enterprise/entities/listing";
+import { QueueService } from "../../../queue/queue-service";
 import { ListingsRepository } from "../../../repositories/listings-repository";
 import { ResourceNotFoundError } from "../../_errors/resource-not-found-error";
 import { GenerateListingTextDTO } from "./generate-listing-text-dto";
@@ -9,7 +8,10 @@ import { GenerateListingTextDTO } from "./generate-listing-text-dto";
 type GenerateListingTextUseCaseResponse = Either<ResourceNotFoundError, null>;
 
 export class GenerateListingTextUseCase {
-  constructor(private listingsRepository: ListingsRepository) {}
+  constructor(
+    private listingsRepository: ListingsRepository,
+    private queueService: QueueService,
+  ) {}
 
   async execute({ listingId }: GenerateListingTextDTO): Promise<GenerateListingTextUseCaseResponse> {
     const listing = await this.listingsRepository.findById(listingId);
@@ -20,11 +22,8 @@ export class GenerateListingTextUseCase {
 
     await this.listingsRepository.updateStatus(listingId, "TEXT_PROCESSING" as StatusEnum);
 
-    await qstash.publishJSON({
-      url: `${env.API_URL}/v1/listings/process-text`,
-      body: {
-        listingId: listing.id.toString(),
-      },
+    await this.queueService.publish("process-text", {
+      listingId: listing.id.toString(),
     });
 
     return right(null);
