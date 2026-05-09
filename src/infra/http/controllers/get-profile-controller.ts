@@ -1,16 +1,21 @@
+import { z, ZodError } from "zod";
 import { Controller } from "../../../core/infra/controller";
 import { clientError, fail, HttpResponse, ok } from "../../../core/infra/http-response";
-import { GetProfileUseCase } from "../../../domain/application/use-cases/get-profile";
+import { GetProfileUseCase } from "../../../domain/application/use-cases/user/get-profile/get-profile";
 
-type GetProfileControllerRequest = {
-  userId: string;
-};
+const getProfileControllerRequest = z.object({
+  userId: z.uuid(),
+});
+
+type GetProfileControllerRequest = z.infer<typeof getProfileControllerRequest>;
 
 export class GetProfileController implements Controller {
   constructor(private getProfileUseCase: GetProfileUseCase) {}
 
-  async handle({ userId }: GetProfileControllerRequest): Promise<HttpResponse> {
+  async handle(request: GetProfileControllerRequest): Promise<HttpResponse> {
     try {
+      const { userId } = getProfileControllerRequest.parse(request);
+
       const result = await this.getProfileUseCase.execute({ userId });
 
       if (result.isLeft()) {
@@ -23,9 +28,10 @@ export class GetProfileController implements Controller {
 
       return ok({ user });
     } catch (err) {
-      if (err instanceof Error) {
-        return fail(err);
+      if (err instanceof ZodError) {
+        return clientError(z.prettifyError(err));
       }
+
       // If 'err' is not an Error, wrap it
       return fail(new Error(String(err)));
     }

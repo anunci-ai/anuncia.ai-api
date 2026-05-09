@@ -1,5 +1,5 @@
 import { Controller } from "../../../core/infra/controller";
-import { GetProfileUseCase } from "../../../domain/application/use-cases/get-profile";
+import { GetProfileUseCase } from "../../../domain/application/use-cases/user/get-profile/get-profile";
 import { PrismaUsersRepository } from "../../prisma/repositories/prisma-users-repository";
 import { GetProfileController } from "../controllers/get-profile-controller";
 

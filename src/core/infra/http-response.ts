@@ -17,6 +17,13 @@ export function created<T>(dto?: T): HttpResponse {
   };
 }
 
+export function accepted<T>(dto?: T): HttpResponse {
+  return {
+    statusCode: 202,
+    body: dto,
+  };
+}
+
 export function clientError<T>(dto?: T): HttpResponse {
   return {
     statusCode: 400,

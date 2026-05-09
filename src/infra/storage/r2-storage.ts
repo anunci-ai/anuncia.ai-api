@@ -17,7 +17,7 @@ export class R2Storage implements Uploader {
 
     await s3Client.send(command);
 
-    const url = `https://${env.CLOUDFLARE_PUBLIC_URL}/${uniqueFileName}`;
+    const url = `https://${env.CLOUDFLARE_PUBLIC_URL}/${env.CLOUDFLARE_BUCKET_NAME}/${uniqueFileName}`;
 
     return { url };
   }

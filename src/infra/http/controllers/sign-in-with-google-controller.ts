@@ -1,20 +1,20 @@
-import { z } from "zod";
-import { SignInWithGoogleUseCase } from "../../../domain/application/use-cases/sign-in-with-google";
-import { created, fail, HttpResponse, unauthorized } from "../../../core/infra/http-response";
+import { z, ZodError } from "zod";
+import { SignInWithGoogleUseCase } from "../../../domain/application/use-cases/account/sign-in-with-google/sign-in-with-google";
+import { clientError, created, fail, HttpResponse, unauthorized } from "../../../core/infra/http-response";
 import { Controller } from "../../../core/infra/controller";
 
-const signInWithGoogleRequest = z.object({
+const signInWithGoogleControllerRequest = z.object({
   googleIdToken: z.string({ message: "Google ID Token is missing!" }),
 });
 
-type SignInWithGoogleRequest = z.infer<typeof signInWithGoogleRequest>;
+type SignInWithGoogleControllerRequest = z.infer<typeof signInWithGoogleControllerRequest>;
 
 export class SignInWithGoogleController implements Controller {
   constructor(private signInWithGoogleUseCase: SignInWithGoogleUseCase) {}
 
-  async handle(request: SignInWithGoogleRequest): Promise<HttpResponse> {
+  async handle(request: SignInWithGoogleControllerRequest): Promise<HttpResponse> {
     try {
-      const { googleIdToken } = signInWithGoogleRequest.parse(request);
+      const { googleIdToken } = signInWithGoogleControllerRequest.parse(request);
 
       const result = await this.signInWithGoogleUseCase.execute({
         googleIdToken,
@@ -29,9 +29,10 @@ export class SignInWithGoogleController implements Controller {
 
       return created({ token });
     } catch (err) {
-      if (err instanceof Error) {
-        return fail(err);
+      if (err instanceof ZodError) {
+        return clientError(z.prettifyError(err));
       }
+
       // If 'err' is not an Error, wrap it
       return fail(new Error(String(err)));
     }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { makeSignInWithPasswordController } from "../factories/make-sign-in-with-password-controller";
-import { makeCreateAccountController } from "../factories/make-create-account-controller";
+import { makeCreateUserController } from "../factories/make-create-user-controller";
 import { makeSignInWithGoogleController } from "../factories/make-sign-in-with-google-controller";
 import { adaptRoute } from "../../../core/infra/adapters/express-route-adapter";
 import { auth } from "../middlewares/auth";
@@ -8,7 +8,7 @@ import { makeGetProfileController } from "../factories/make-get-profile-controll
 
 const authRoutes = Router();
 
-authRoutes.post("/sign-up", adaptRoute(makeCreateAccountController()));
+authRoutes.post("/sign-up", adaptRoute(makeCreateUserController()));
 
 authRoutes.post("/sessions", adaptRoute(makeSignInWithPasswordController()));
 

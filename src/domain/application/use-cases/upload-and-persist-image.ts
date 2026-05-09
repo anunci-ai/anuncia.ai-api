@@ -1,5 +1,5 @@
 import { Either, left, right } from "../../../core/either";
-import { InvalidFileTypeError } from "./errors/invalid-file-type-error";
+import { InvalidFileTypeError } from "./_errors/invalid-file-type-error";
 import { Uploader } from "../storage/uploader";
 
 type UploadAndPersistImageUseCaseRequest = {

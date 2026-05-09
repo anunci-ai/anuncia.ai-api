@@ -8,23 +8,33 @@ export enum MarketplaceEnum {
   SHOPIFY = "SHOPIFY",
 }
 
+// export enum StatusEnum {
+//   PENDING = "PENDING",
+//   PROCESSING = "PROCESSING",
+//   COMPLETED = "COMPLETED",
+//   FAILED = "FAILED",
+// }
+
 export enum StatusEnum {
-  PENDING = "PENDING",
-  PROCESSING = "PROCESSING",
+  DRAFT = "DRAFT",
+  TEXT_PROCESSING = "TEXT_PROCESSING",
+  TEXT_COMPLETED = "TEXT_COMPLETED",
+  IMAGE_PROCESSING = "IMAGE_PROCESSING",
+  IMAGE_COMPLETED = "IMAGE_COMPLETED",
   COMPLETED = "COMPLETED",
   FAILED = "FAILED",
 }
 
 interface ListingProps {
   userId: UniqueEntityId;
+  inputDescription: string;
   marketplace: MarketplaceEnum;
   status: StatusEnum;
-  subjectImageUrl: string;
-  shortDescription: string;
   generatedTitle?: string;
   generatedDescription?: string;
   generatedMetaTitle?: string;
   generatedMetaDescription?: string;
+  originalImageUrl?: string;
   generatedTags?: string[];
   generatedSlug?: Slug;
   createdAt?: Date;
@@ -44,12 +54,12 @@ export class Listing extends Entity<ListingProps> {
     return this.props.status;
   }
 
-  get subjectImageUrl() {
-    return this.props.subjectImageUrl;
+  get originalImageUrl() {
+    return this.props.originalImageUrl;
   }
 
-  get shortDescription() {
-    return this.props.shortDescription;
+  get inputDescription() {
+    return this.props.inputDescription;
   }
 
   get generatedTitle() {
