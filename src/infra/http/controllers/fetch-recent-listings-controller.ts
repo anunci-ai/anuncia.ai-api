@@ -1,7 +1,7 @@
 import { z, ZodError } from "zod";
 import { Controller } from "../../../core/infra/controller";
 import { clientError, fail, HttpResponse, ok } from "../../../core/infra/http-response";
-import { FetchRecentListingUseCase } from "../../../domain/application/use-cases/listing/fetch-recent-listings/fetch-recent-listings";
+import { FetchRecentListingsUseCase } from "../../../domain/application/use-cases/listing/fetch-recent-listings/fetch-recent-listings";
 
 const fetchRecentListingsControllerRequest = z.object({
   userId: z.uuid(),
@@ -11,7 +11,7 @@ const fetchRecentListingsControllerRequest = z.object({
 type FetchRecentListingsControllerRequest = z.infer<typeof fetchRecentListingsControllerRequest>;
 
 export class FetchRecentListingsController implements Controller {
-  constructor(private fetchRecentListingsUseCase: FetchRecentListingUseCase) {}
+  constructor(private fetchRecentListingsUseCase: FetchRecentListingsUseCase) {}
 
   async handle(request: FetchRecentListingsControllerRequest): Promise<HttpResponse> {
     try {

@@ -3,8 +3,17 @@ import { PaginationParams } from "../../../core/repositories/pagination-params";
 import { ListingsRepository } from "../../../domain/application/repositories/listings-repository";
 import { Listing, StatusEnum } from "../../../domain/enterprise/entities/listing";
 import { ListingMapper } from "../../../domain/enterprise/mappers/listing-mapper";
+import { StatusEnum as PrismaStatusEnum } from "@prisma/client";
 
 export class PrismaListingsRepository implements ListingsRepository {
+  async create(listing: Listing): Promise<void> {
+    const data = ListingMapper.toPersistence(listing);
+
+    await prisma.listing.create({
+      data,
+    });
+  }
+
   async updateStatus(id: string, status: StatusEnum): Promise<void> {
     await prisma.listing.update({
       where: {
@@ -73,7 +82,7 @@ export class PrismaListingsRepository implements ListingsRepository {
         id: listing.id.toString(),
       },
       data: {
-        status: listing.status,
+        status: listing.status as unknown as PrismaStatusEnum,
         generatedTitle: listing.generatedTitle,
         generatedDescription: listing.generatedDescription,
         generatedMetaDescription: listing.generatedMetaDescription,
