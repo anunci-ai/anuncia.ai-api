@@ -2,7 +2,7 @@ import { GeneratedImage } from "../entities/generated-image";
 import { GeneratedImage as PersistenceGeneratedImage } from "@prisma/client";
 import { UniqueEntityId } from "../../../core/entities/unique-entity-id";
 
-export class AccountMapper {
+export class GeneratedImageMapper {
   static toDomain(raw: PersistenceGeneratedImage) {
     return GeneratedImage.create(
       {
