@@ -7,7 +7,7 @@ export const envSchema = z.object({
   PORT: z.coerce.number().optional().default(8080),
   NODE_ENV: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
-  CLOUDFLARE_ENDPOINT: z.string().url(),
+  CLOUDFLARE_ENDPOINT: z.url(),
   CLOUDFLARE_ACCESS_KEY_ID: z.string(),
   CLOUDFLARE_SECRET_ACCESS_KEY: z.string(),
   CLOUDFLARE_BUCKET_NAME: z.string(),
