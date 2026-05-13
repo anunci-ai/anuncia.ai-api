@@ -3,7 +3,7 @@ import { PaginationParams } from "../../../core/repositories/pagination-params";
 import { ListingsRepository } from "../../../domain/application/repositories/listings-repository";
 import { Listing, StatusEnum } from "../../../domain/enterprise/entities/listing";
 import { ListingMapper } from "../../../domain/enterprise/mappers/listing-mapper";
-import { Prisma, StatusEnum as PrismaStatusEnum } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export class PrismaListingsRepository implements ListingsRepository {
   async delete(id: string): Promise<void> {
@@ -96,18 +96,13 @@ export class PrismaListingsRepository implements ListingsRepository {
   }
 
   async update(listing: Listing): Promise<Listing> {
+    const data = ListingMapper.toPersistence(listing);
+
     const updatedListing = await prisma.listing.update({
       where: {
         id: listing.id.toString(),
       },
-      data: {
-        status: listing.status as unknown as PrismaStatusEnum,
-        generatedTitle: listing.generatedTitle,
-        generatedDescription: listing.generatedDescription,
-        generatedMetaDescription: listing.generatedMetaDescription,
-        generatedSlug: listing.generatedSlug?.value,
-        generatedTags: listing.generatedTags,
-      },
+      data,
     });
 
     return ListingMapper.toDomain(updatedListing);

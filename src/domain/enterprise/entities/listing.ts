@@ -103,6 +103,15 @@ export class Listing extends Entity<ListingProps> {
     this.touch();
   }
 
+  public assignOriginalImageUrl(imageUrl: string) {
+    if (!imageUrl) {
+      return;
+    }
+
+    this.props.originalImageUrl = imageUrl;
+    this.touch();
+  }
+
   static create(props: Optional<ListingProps, "createdAt">, id?: UniqueEntityId) {
     const listing = new Listing(
       {
