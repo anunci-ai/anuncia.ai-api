@@ -10,7 +10,7 @@ export class PrismaUsersRepository implements UsersRepository {
     const user = await prisma.user.findUnique({
       where: { id },
       include: {
-        subscriptions: { where: { isActive: true }, take: 1 },
+        subscriptions: { where: { isActive: true }, take: 1, include: { plan: true } },
       },
     });
 
@@ -27,10 +27,13 @@ export class PrismaUsersRepository implements UsersRepository {
       avatarUrl: user.avatarUrl ?? undefined,
       subscription: activeSubscription
         ? {
-            planId: activeSubscription.planId,
             isActive: activeSubscription.isActive,
             tokensTotal: activeSubscription.tokensTotal,
             tokensRemaining: activeSubscription.tokensRemaining,
+            plan: {
+              id: activeSubscription.plan.id,
+              name: activeSubscription.plan.name,
+            },
           }
         : undefined,
     };

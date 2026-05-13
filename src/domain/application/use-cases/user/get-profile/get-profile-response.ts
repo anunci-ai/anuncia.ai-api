@@ -5,10 +5,13 @@ export interface GetProfileResponse {
     avatarUrl?: string;
     email: string;
     subscription?: {
-      planId: string;
       isActive: boolean;
       tokensTotal: number;
       tokensRemaining: number;
+      plan: {
+        id: string;
+        name: string;
+      };
     };
   };
 }
