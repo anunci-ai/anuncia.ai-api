@@ -10,6 +10,7 @@ interface SubscriptionProps {
   startDate?: Date;
   endDate?: Date;
   isActive: boolean;
+  canceledAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -41,6 +42,10 @@ export class Subscription extends Entity<SubscriptionProps> {
 
   get isActive() {
     return this.props.isActive;
+  }
+
+  get canceledAt() {
+    return this.props.canceledAt;
   }
 
   get createdAt() {
@@ -92,6 +97,16 @@ export class Subscription extends Entity<SubscriptionProps> {
       this.props.tokensRemaining = 0;
       this.props.isActive = false;
     }
+  }
+
+  public cancel(): void {
+    if (!this.isActive) {
+      throw new Error("Assinatura já está inativa ou cancelada.");
+    }
+
+    this.props.isActive = false;
+    this.props.canceledAt = new Date();
+    this.touch();
   }
 
   private touch() {

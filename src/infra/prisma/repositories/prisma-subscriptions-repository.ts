@@ -4,6 +4,20 @@ import { Subscription } from "../../../domain/enterprise/entities/subscription";
 import { SubscriptionMapper } from "../../../domain/enterprise/mappers/subscription-mapper";
 
 export class PrismaSubscriptionsRepository implements SubscriptionsRepository {
+  async findById(id: string): Promise<Subscription | null> {
+    const subscription = await prisma.subscription.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!subscription) {
+      return null;
+    }
+
+    return SubscriptionMapper.toDomain(subscription);
+  }
+
   async findByUserId(userId: string): Promise<Subscription | null> {
     const subscription = await prisma.subscription.findFirst({
       where: {
@@ -16,6 +30,14 @@ export class PrismaSubscriptionsRepository implements SubscriptionsRepository {
     }
 
     return SubscriptionMapper.toDomain(subscription);
+  }
+
+  async create(subscription: Subscription): Promise<void> {
+    const data = SubscriptionMapper.toPersistence(subscription);
+
+    await prisma.subscription.create({
+      data,
+    });
   }
 
   async save(subscription: Subscription): Promise<void> {

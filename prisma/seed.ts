@@ -6,14 +6,14 @@ async function main() {
   console.log("Seeding database...");
 
   const demoPlan = await prisma.plan.upsert({
-    where: { id: "11111111-1111-1111-1111-111111111111" },
+    where: { id: "11111111-1111-4111-8111-111111111111" },
     update: {
       name: "Demonstração",
       priceInCents: 0,
       tokensQuantity: 1000,
     },
     create: {
-      id: "11111111-1111-1111-1111-111111111111",
+      id: "11111111-1111-4111-8111-111111111111",
       name: "Demonstração",
       priceInCents: 0,
       tokensQuantity: 1000,
