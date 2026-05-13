@@ -6,6 +6,14 @@ import { ListingMapper } from "../../../domain/enterprise/mappers/listing-mapper
 import { Prisma, StatusEnum as PrismaStatusEnum } from "@prisma/client";
 
 export class PrismaListingsRepository implements ListingsRepository {
+  async delete(id: string): Promise<void> {
+    await prisma.listing.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
   async create(listing: Listing): Promise<void> {
     const data = ListingMapper.toPersistence(listing);
 

@@ -10,6 +10,7 @@ import { makeFetchRecentListingsController } from "../factories/make-fetch-recen
 import { makeCreateListingController } from "../factories/make-create-listing-controller";
 import { makeGenerateListingImagesController } from "../factories/make-generate-listing-images-controller";
 import { makeProcessListingImagesController } from "../factories/make-process-listing-images-controller";
+import { makeDeleteListingController } from "../factories/make-delete-listing-controller";
 
 const listingsRoutes = Router();
 
@@ -20,5 +21,6 @@ listingsRoutes.patch("/generate-text/:listingId", auth, adaptRoute(makeGenerateL
 listingsRoutes.post("/process-text", adaptRoute(makeProcessListingTextController()));
 listingsRoutes.patch("/generate-images/:listingId", auth, adaptRoute(makeGenerateListingImagesController()));
 listingsRoutes.post("/process-images", adaptRoute(makeProcessListingImagesController()));
+listingsRoutes.delete("/:listingId/delete", auth, adaptRoute(makeDeleteListingController()));
 
 export { listingsRoutes };

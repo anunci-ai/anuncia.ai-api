@@ -24,6 +24,13 @@ export function accepted<T>(dto?: T): HttpResponse {
   };
 }
 
+export function noContent(): HttpResponse {
+  return {
+    statusCode: 204,
+    body: null,
+  };
+}
+
 export function clientError<T>(dto?: T): HttpResponse {
   return {
     statusCode: 400,

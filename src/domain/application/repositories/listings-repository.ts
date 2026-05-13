@@ -2,6 +2,7 @@ import { PaginationParams } from "../../../core/repositories/pagination-params";
 import { Listing, StatusEnum } from "../../enterprise/entities/listing";
 
 export interface ListingsRepository {
+  delete(id: string): Promise<void>;
   create(listing: Listing): Promise<void>;
   updateStatus(id: string, status: StatusEnum): Promise<void>;
   findManyRecentByUserId(
