@@ -7,8 +7,10 @@ interface SubscriptionProps {
   planId: UniqueEntityId;
   tokensTotal: number;
   tokensRemaining: number;
-  startDate: Date;
-  endDate: Date;
+  startDate?: Date;
+  endDate?: Date;
+  isActive: boolean;
+  canceledAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -38,6 +40,14 @@ export class Subscription extends Entity<SubscriptionProps> {
     return this.props.endDate;
   }
 
+  get isActive() {
+    return this.props.isActive;
+  }
+
+  get canceledAt() {
+    return this.props.canceledAt;
+  }
+
   get createdAt() {
     return this.props.createdAt;
   }
@@ -58,15 +68,47 @@ export class Subscription extends Entity<SubscriptionProps> {
     return `${this.tokensUsedPercentage.toFixed(2)}%`;
   }
 
-  static create(props: Optional<SubscriptionProps, "createdAt">, id?: UniqueEntityId) {
+  static create(props: Optional<SubscriptionProps, "createdAt" | "isActive">, id?: UniqueEntityId) {
     const subscription = new Subscription(
       {
         ...props,
+        isActive: props.isActive ?? true,
         createdAt: new Date(),
       },
       id,
     );
 
     return subscription;
+  }
+
+  public consumeTokens(amount: number): void {
+    if (!this.isActive) {
+      throw new Error("Assinatura inativa.");
+    }
+
+    if (this.tokensRemaining < amount) {
+      throw new Error("Saldo de tokens insuficiente.");
+    }
+
+    this.props.tokensRemaining -= amount;
+    this.touch();
+
+    if (this.props.tokensRemaining <= 0) {
+      this.props.tokensRemaining = 0;
+    }
+  }
+
+  public cancel(): void {
+    if (!this.isActive) {
+      throw new Error("Assinatura já está inativa ou cancelada.");
+    }
+
+    this.props.isActive = false;
+    this.props.canceledAt = new Date();
+    this.touch();
+  }
+
+  private touch() {
+    this.props.updatedAt = new Date();
   }
 }

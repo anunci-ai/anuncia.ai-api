@@ -7,7 +7,8 @@
     "dev": "tsx --watch src/infra/http/app.ts",
     "prepare": "husky",
     "test": "vitest",
-    "vercel-build": "npx prisma generate && npx prisma migrate deploy"
+    "vercel-build": "npx prisma generate && npx prisma migrate deploy",
+    "db:seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
