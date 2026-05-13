@@ -28,11 +28,22 @@ export class PrismaListingsRepository implements ListingsRepository {
   async findManyRecentByUserId(
     userId: string,
     { page }: PaginationParams,
-  ): Promise<{ id: string; inputDescription: string }[]> {
+  ): Promise<
+    {
+      id: string;
+      inputDescription: string;
+      marketplace: string;
+      createdAt: Date;
+      originalImageUrl: string | null;
+    }[]
+  > {
     const listings = await prisma.listing.findMany({
       select: {
         id: true,
         inputDescription: true,
+        marketplace: true,
+        createdAt: true,
+        originalImageUrl: true,
       },
       where: {
         userId,
