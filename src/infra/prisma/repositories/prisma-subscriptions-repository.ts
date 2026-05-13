@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "..";
 import { SubscriptionsRepository } from "../../../domain/application/repositories/subscriptions-repository";
 import { Subscription } from "../../../domain/enterprise/entities/subscription";
@@ -40,10 +41,12 @@ export class PrismaSubscriptionsRepository implements SubscriptionsRepository {
     });
   }
 
-  async save(subscription: Subscription): Promise<void> {
+  async save(subscription: Subscription, trx: Prisma.TransactionClient): Promise<void> {
+    const client = trx ?? prisma;
+
     const data = SubscriptionMapper.toPersistence(subscription);
 
-    await prisma.subscription.update({
+    await client.subscription.update({
       where: {
         id: data.id,
       },

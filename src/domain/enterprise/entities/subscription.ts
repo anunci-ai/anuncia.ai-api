@@ -95,7 +95,6 @@ export class Subscription extends Entity<SubscriptionProps> {
 
     if (this.props.tokensRemaining <= 0) {
       this.props.tokensRemaining = 0;
-      this.props.isActive = false;
     }
   }
 

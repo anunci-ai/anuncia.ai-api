@@ -25,7 +25,7 @@ export class CreateListingController {
       });
 
       if (result.isLeft()) {
-        return clientError();
+        return clientError(result.value.message);
       }
 
       return ok(result.value);
