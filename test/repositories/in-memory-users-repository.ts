@@ -1,7 +1,22 @@
+import { ProfileData } from "../../src/core/repositories/profile-data";
 import { UsersRepository } from "../../src/domain/application/repositories/users-repository";
 import { User } from "../../src/domain/enterprise/entities/user";
 
 export class InMemoryUsersRepository implements UsersRepository {
+  async findByIdAndGetSubscription(id: string): Promise<ProfileData | null> {
+    const user = this.users.find((item) => item.id.toString() === id);
+
+    if (!user) {
+      return null;
+    }
+
+    return {
+      id: user.id.toString(),
+      name: user.name,
+      email: user.email,
+      avatarUrl: user.avatarUrl,
+    };
+  }
   private users: User[] = [];
 
   async findById(id: string): Promise<User | null> {

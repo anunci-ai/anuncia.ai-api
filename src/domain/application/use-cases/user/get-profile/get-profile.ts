@@ -10,19 +10,14 @@ export class GetProfileUseCase {
   constructor(private usersRepository: UsersRepository) {}
 
   async execute({ userId }: GetProfileDTO): Promise<GetProfileUseCaseResponse> {
-    const user = await this.usersRepository.findById(userId);
+    const user = await this.usersRepository.findByIdAndGetSubscription(userId);
 
     if (!user) {
       return left(new ResourceNotFoundError("Usuário não encontrado."));
     }
 
     return right({
-      user: {
-        id: user.id.toString(),
-        name: user.name,
-        avatarUrl: user.avatarUrl,
-        email: user.email,
-      },
+      user,
     });
   }
 }
