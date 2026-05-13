@@ -1,20 +1,23 @@
 import { PrismaClient } from "@prisma/client";
+import { randomUUID } from "node:crypto";
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log("Seeding database...");
 
+  const planId = randomUUID();
+
   const demoPlan = await prisma.plan.upsert({
-    where: { id: "11111111-1111-4111-8111-111111111111" },
+    where: { id: planId },
     update: {
-      name: "Demonstração",
+      name: "DEMO",
       priceInCents: 0,
       tokensQuantity: 1000,
     },
     create: {
-      id: "11111111-1111-4111-8111-111111111111",
-      name: "Demonstração",
+      id: planId,
+      name: "DEMO",
       priceInCents: 0,
       tokensQuantity: 1000,
     },

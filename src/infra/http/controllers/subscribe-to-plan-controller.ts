@@ -5,8 +5,8 @@ import { HttpResponse, clientError, created, fail } from "../../../core/infra/ht
 import { UserAlreadySubscribedError } from "../../../domain/application/use-cases/_errors/user-already-subscribed-error";
 
 const subscribeToPlanSchema = z.object({
-  userId: z.string().uuid(),
-  planId: z.string().uuid(),
+  userId: z.uuid(),
+  planId: z.uuid(),
 });
 
 type SubscribeToPlanRequest = z.infer<typeof subscribeToPlanSchema>;
