@@ -20,6 +20,7 @@ export const envSchema = z.object({
   API_URL: z.url(),
   AI_TEXT_MODEL: z.string(),
   FAL_KEY: z.string(),
+  RESEND_API_KEY: z.string(),
 });
 
 export const env = envSchema.parse(process.env);
