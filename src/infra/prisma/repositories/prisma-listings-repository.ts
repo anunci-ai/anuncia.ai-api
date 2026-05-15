@@ -4,8 +4,58 @@ import { ListingsRepository } from "../../../domain/application/repositories/lis
 import { Listing, StatusEnum } from "../../../domain/enterprise/entities/listing";
 import { ListingMapper } from "../../../domain/enterprise/mappers/listing-mapper";
 import { Prisma } from "@prisma/client";
+import { subDays, format } from "date-fns";
 
 export class PrismaListingsRepository implements ListingsRepository {
+  async countLastMonthByUserId(userId: string): Promise<{ date: string; count: number }[]> {
+    const startDate = subDays(new Date(), 30);
+
+    const groupedListings = await prisma.listing.groupBy({
+      by: ["createdAt"],
+      where: {
+        userId,
+        createdAt: {
+          gte: startDate,
+        },
+      },
+      _count: {
+        id: true,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+
+    const map = new Map<string, number>();
+
+    for (const item of groupedListings) {
+      const date = format(item.createdAt, "yyyy-MM-dd");
+
+      map.set(date, (map.get(date) ?? 0) + item._count.id);
+    }
+
+    const lastMonth = Array.from({ length: 30 }).map((_, index) => {
+      const date = format(subDays(new Date(), 29 - index), "yyyy-MM-dd");
+
+      return {
+        date,
+        count: map.get(date) ?? 0,
+      };
+    });
+
+    return lastMonth;
+  }
+
+  async countTotalByUserId(userId: string): Promise<number> {
+    const total = await prisma.listing.count({
+      where: {
+        userId,
+      },
+    });
+
+    return total;
+  }
+
   async delete(id: string): Promise<void> {
     await prisma.listing.delete({
       where: {

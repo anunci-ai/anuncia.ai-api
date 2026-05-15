@@ -2,6 +2,8 @@ import { PaginationParams } from "../../../core/repositories/pagination-params";
 import { Listing, StatusEnum } from "../../enterprise/entities/listing";
 
 export interface ListingsRepository {
+  countLastMonthByUserId(userId: string): Promise<{ date: string; count: number }[]>;
+  countTotalByUserId(userId: string): Promise<number>;
   delete(id: string): Promise<void>;
   create(listing: Listing): Promise<void>;
   updateStatus(id: string, status: StatusEnum): Promise<void>;
