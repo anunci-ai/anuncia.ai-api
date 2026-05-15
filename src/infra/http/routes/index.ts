@@ -5,6 +5,7 @@ import { uploadRoutes } from "./upload.routes";
 import { subscriptionsRoutes } from "./subscriptions.routes";
 import { generatedImagesRoutes } from "./generated-images.routes";
 import { analyticsRoutes } from "./analytics.routes";
+import { plansRoutes } from "./plans.routes";
 
 export const routes = Router();
 
@@ -14,3 +15,4 @@ routes.use("/uploads", uploadRoutes);
 routes.use("/subscriptions", subscriptionsRoutes);
 routes.use("/images", generatedImagesRoutes);
 routes.use("/analytics", analyticsRoutes);
+routes.use("/plans", plansRoutes);
