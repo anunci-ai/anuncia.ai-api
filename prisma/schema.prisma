@@ -42,9 +42,10 @@ model User {
   password  String?
   createdAt DateTime @default(now()) @map("created_at")
 
-  accounts      Account[]
-  subscriptions Subscription[]
-  listings      Listing[]
+  accounts            Account[]
+  subscriptions       Subscription[]
+  listings            Listing[]
+  passwordResetTokens PasswordResetToken[]
 
   @@map("users")
 }
@@ -126,4 +127,16 @@ model GeneratedImage {
   listing Listing @relation(fields: [listingId], references: [id])
 
   @@map("generated_images")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_reset_tokens")
 }

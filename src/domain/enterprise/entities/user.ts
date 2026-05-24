@@ -28,6 +28,10 @@ export class User extends Entity<UserProps> {
     return this.props.password;
   }
 
+  set password(password: Password | undefined) {
+    this.props.password = password;
+  }
+
   get createdAt() {
     return this.props.createdAt;
   }
