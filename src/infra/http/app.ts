@@ -12,11 +12,6 @@ app.use(express.json());
 
 app.use("/v1", routes);
 
-if (env.NODE_ENV !== "production") {
-  app.get("/openapi.json", (_, res) => res.json(openapiDocument));
-  app.use("/docs", apiReference({ url: "/openapi.json", theme: "default" }));
-}
-
 app.get("/", (request, response) => {
   return response.json({
     status: "ok",
