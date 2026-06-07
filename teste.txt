@@ -1,0 +1,1 @@
+Simulando o fluxo de GitFlow do grupo
