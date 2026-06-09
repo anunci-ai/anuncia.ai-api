@@ -1,4 +1,5 @@
 services:
+  # Banco de Dados
   postgres:
     image: "bitnami/postgresql"
     container_name: "anuncia-ai"
@@ -8,3 +9,31 @@ services:
       - POSTGRESQL_USERNAME=docker
       - POSTGRESQL_PASSWORD=docker
       - POSTGRESQL_DATABASE=anunciadb
+    volumes:
+      - postgres_data:/bitnami/postgresql
+
+  # Painel de Administração
+  adminer:
+    image: "adminer"
+    container_name: "adminer-painel"
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+
+  # Aplicação Web em TypeScript
+  web:
+    build: .
+    container_name: "anuncia-app"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=docker
+      - DB_PASS=docker
+      - DB_NAME=anunciadb
+
+volumes:
+  postgres_data:
